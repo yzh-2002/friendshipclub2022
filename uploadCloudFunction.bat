@@ -1,0 +1,1 @@
+"D:\User\weixin-project\developer\微信web开发者工具\cli.bat" cloud functions deploy --e cloud1-8gc4g06jbe3d0c1f --n quickstartFunctions --r --project "D:\User\weixin-project\FriendShip-Club2022" --report_first --report
