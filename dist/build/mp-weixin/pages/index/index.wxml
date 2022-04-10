@@ -1,0 +1,1 @@
+<view class="content"><image class="logo" src="/static/logo.png"></image><view><text class="title">{{title}}</text><text>{{location}}</text><button data-event-opts="{{[['tap',[['credit',['$event']]]]]}}" bindtap="__e">点击打卡</button><button data-event-opts="{{[['tap',[['login',['$event']]]]]}}" bindtap="__e">点击登录</button></view></view>
