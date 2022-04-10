@@ -24,7 +24,9 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 wx.__webpack_require_UNI_MP_PLUGIN__ = __webpack_require__;
-_vue.default.config.productionTip = false;
+_vue.default.config.productionTip = false; // 全局对象
+
+_vue.default.prototype.userInformation = {};
 _App.default.mpType = 'app';
 var app = new _vue.default(_objectSpread({}, _App.default));
 wx.cloud.init({

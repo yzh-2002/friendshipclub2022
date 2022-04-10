@@ -151,11 +151,16 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
+var _vue = _interopRequireDefault(__webpack_require__(/*! vue */ 3));
+
 var _userLogin = __webpack_require__(/*! @/api/userLogin.js */ 18);
 
-var _getLocation = __webpack_require__(/*! @/api/getLocation.js */ 19);
+var _reverseGeocoder = __webpack_require__(/*! ../../../utils/Applets/reverseGeocoder */ 19);
 
-//
+var _calculateDistance = __webpack_require__(/*! ../../../utils/Applets/calculateDistance */ 25);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 //
 //
 //
@@ -170,19 +175,21 @@ var _getLocation = __webpack_require__(/*! @/api/getLocation.js */ 19);
 var _default = {
   data: function data() {
     return {
-      title: '暂未登录',
-      location: "电子科技大学沙河足球场"
+      title: '暂未登录'
     };
   },
   onLoad: function onLoad() {},
   methods: {
-    login: function login() {
-      (0, _userLogin.userLogin)().then(function (res) {
-        console.log(res);
+    test: function test() {
+      wx.cloud.callFunction({
+        name: "credit"
+      }).then(function (res) {
+        console.log("正在计算距离......");
+        (0, _calculateDistance.CalculateDistance)([res.result.location]);
       });
     },
-    credit: function credit() {
-      (0, _getLocation.getLocation)().then(function (res) {
+    login: function login() {
+      (0, _userLogin.userLogin)().then(function (res) {
         console.log(res);
       });
     }

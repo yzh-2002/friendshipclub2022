@@ -3,37 +3,40 @@
 		<image class="logo" src="/static/logo.png"></image>
 		<view>
 			<text class="title">{{title}}</text>
-			<text>{{location}}</text>
-			<button @click="credit">点击打卡</button>
+			<button @click="test">点击打卡</button>
 			<button @click="login">点击登录</button>
 		</view>
 	</view>
 </template>
 
 <script>
+import Vue from "vue"
 import {userLogin} from "@/api/userLogin.js"
-import {getLocation} from "@/api/getLocation.js"
+import {GetLocation} from "../../../utils/Applets/reverseGeocoder"
+import {CalculateDistance} from "../../../utils/Applets/calculateDistance"
 	export default {
 		data() {
 			return {
 				title: '暂未登录',
-				location:"电子科技大学沙河足球场"
 			}
 		},
 		onLoad() {
 
 		},
 		methods: {
+			test(){
+				wx.cloud.callFunction({
+					name:"credit"
+				}).then(res=>{
+					console.log("正在计算距离......");
+					CalculateDistance([res.result.location])
+				})
+			},
 			login(){
 				userLogin().then(res=>{
 					console.log(res)
 				})
 			},
-			credit(){
-				getLocation().then(res=>{
-					console.log(res)
-				})
-			}
 		}
 	}
 </script>

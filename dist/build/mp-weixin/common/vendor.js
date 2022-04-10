@@ -9156,8 +9156,14 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.userLogin = userLogin;
 
+var _vue = _interopRequireDefault(__webpack_require__(/*! vue */ 3));
+
+var _reverseGeocoder = __webpack_require__(/*! ../../utils/Applets/reverseGeocoder */ 19);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 // 注意api中函数和云函数的区别：
-// 经过云函数和直接操作数据库差别在于前者权限多，并且使用的是
+// 经过云函数和直接操作数据库差别在于前者权限多，并且更加安全
 function userLogin() {
   return new Promise(function (resolve, reject) {
     uni.showModal({
@@ -9169,19 +9175,37 @@ function userLogin() {
             desc: "注册用户信息使用",
             lang: "zh_CN",
             success: function success(res) {
-              // 不用调用uni.login获取code了，云函数会帮你获取
               // 除了获取用户信息外，还需要获取用户所处位置
-              wx.cloud.callFunction({
-                name: "userLogin",
-                data: {
-                  nickName: res.nickName,
-                  gender: res.gender,
-                  avatarUrl: res.avatarUrl
-                }
-              }).then(function (res) {
-                resolve(res);
-              }).catch(function (err) {
-                reject(err);
+              (0, _reverseGeocoder.GetLocation)().then(function (locat) {
+                // 挂载到全局对象上
+                _vue.default.prototype.userInformation = {
+                  nickName: res.userInfo.nickName,
+                  gender: res.userInfo.gender,
+                  avatarUrl: res.userInfo.avatarUrl,
+                  location: {
+                    latitude: locat.latitude,
+                    longitude: locat.longitude
+                  },
+                  star: [],
+                  credit: 100,
+                  openid: ""
+                };
+                wx.cloud.callFunction({
+                  name: "userLogin",
+                  data: {
+                    nickName: res.userInfo.nickName,
+                    gender: res.userInfo.gender,
+                    avatarUrl: res.userInfo.avatarUrl,
+                    location: {
+                      latitude: locat.latitude,
+                      longitude: locat.longitude
+                    }
+                  }
+                }).then(function (res) {
+                  resolve(res);
+                }).catch(function (err) {
+                  reject(err);
+                });
               });
             }
           });
@@ -9194,9 +9218,9 @@ function userLogin() {
 
 /***/ }),
 /* 19 */
-/*!********************************!*\
-  !*** ./src/api/getLocation.js ***!
-  \********************************/
+/*!******************************************!*\
+  !*** ./utils/Applets/reverseGeocoder.js ***!
+  \******************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -9206,55 +9230,61 @@ function userLogin() {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.getLocation = getLocation;
+exports.GetLocation = GetLocation;
+exports.ReverseGeocoder = ReverseGeocoder;
 
-// 获取用户地理位置信息
-function getLocation() {
-  var QQMapWX = __webpack_require__(/*! ../../utils/qqMap/qqmap-wx-jssdk.min.js */ 20);
+// 负责获取位置坐标（gps二元组）以及封装gps坐标转换成真实坐标
+// 腾讯地图接口
+var QQMapWX = __webpack_require__(/*! ../qqMap/qqmap-wx-jssdk.min.js */ 20);
 
-  var qqmapsdk = new QQMapWX({
-    key: "RIDBZ-YN3KK-SBAJM-ADSAV-2U427-ZJBCM"
-  });
-  uni.getSetting({
-    success: function success(res) {
-      console.log(res);
+var qqmapsdk = new QQMapWX({
+  key: "RIDBZ-YN3KK-SBAJM-ADSAV-2U427-ZJBCM"
+}); // 获取gps信息（弹窗申请等等）
 
-      if (res.authSetting['scope.userLocation']) {
-        uni.authorize({
-          scope: "scope.userLocation",
-          success: function success() {
-            uni.getLocation({
-              type: 'wgs84',
-              geocode: true,
-              success: function success(res) {
-                // 拿到gps坐标
-                // 调用腾讯地图接口逆解析地址信息
-                // 需要注意此时获取位置信息是为了计算场地距自己有多远，而不是为了打卡
-                qqmapsdk.reverseGeocoder({
-                  location: {
-                    latitude: res.latitude,
-                    longitude: res.longitude
-                  },
-                  success: function success(result) {
-                    console.log(result);
-                  },
-                  fail: function fail(err) {
-                    console.log(err);
-                  },
-                  complete: function complete(data) {
-                    console.log(data);
-                  }
-                });
-              }
-            });
-          },
-          fail: function fail() {
-            console.log("拒绝");
-          }
-        });
-      } else {
-        console.log("未授权");
+function GetLocation() {
+  return new Promise(function (resolve, reject) {
+    uni.getSetting({
+      success: function success(res) {
+        if (res.authSetting['scope.userLocation']) {
+          uni.authorize({
+            scope: "scope.userLocation",
+            success: function success() {
+              uni.getLocation({
+                type: 'wgs84',
+                success: function success(res) {
+                  resolve(res);
+                }
+              });
+            },
+            fail: function fail(err) {
+              reject(err);
+            }
+          });
+        } else {
+          // 需要提示他一些功能无法使用
+          console.log("未授权");
+        }
       }
+    });
+  });
+}
+
+function ReverseGeocoder(_ref) {
+  var latitude = _ref.latitude,
+      longitude = _ref.longitude;
+  qqmapsdk.reverseGeocoder({
+    location: {
+      latitude: latitude,
+      longitude: longitude
+    },
+    success: function success(result) {
+      console.log(result);
+    },
+    fail: function fail(err) {
+      console.log(err);
+    },
+    complete: function complete(data) {
+      console.log(data);
     }
   });
 }
@@ -9915,6 +9945,49 @@ var QQMapWX = /*#__PURE__*/function () {
 
 ;
 module.exports = QQMapWX;
+
+/***/ }),
+/* 21 */,
+/* 22 */,
+/* 23 */,
+/* 24 */,
+/* 25 */
+/*!********************************************!*\
+  !*** ./utils/Applets/calculateDistance.js ***!
+  \********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.CalculateDistance = CalculateDistance;
+
+// 计算距离
+// 腾讯地图接口
+var QQMapWX = __webpack_require__(/*! ../qqMap/qqmap-wx-jssdk.min.js */ 20);
+
+var qqmapsdk = new QQMapWX({
+  key: "RIDBZ-YN3KK-SBAJM-ADSAV-2U427-ZJBCM"
+});
+
+function CalculateDistance(destination) {
+  qqmapsdk.calculateDistance({
+    // from参数不指定则表示从当前位置开始计算距离
+    from: '',
+    to: destination,
+    success: function success(res) {
+      console.log("两地之间的距离：", res.result.elements[0].distance, "米");
+    },
+    fail: function fail(err) {
+      console.log(destination);
+      console.log(err);
+    }
+  });
+}
 
 /***/ })
 ]]);

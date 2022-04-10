@@ -3,6 +3,9 @@ import App from './App'
 
 Vue.config.productionTip = false
 
+// 全局对象
+Vue.prototype.userInformation ={}
+
 App.mpType = 'app'
 
 const app = new Vue({

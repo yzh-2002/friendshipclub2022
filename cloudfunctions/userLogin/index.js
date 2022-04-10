@@ -14,26 +14,29 @@ exports.main = async (event, context) => {
   const db =cloud.database()
   const user =db.collection("user")
   const $ =db.command
-
-  await user.where({openid:$.eq(openid)}).get().then(result=>{
-    console.log(result)
-    if (result.data){
-      // data不为空
-      console.log("数据库中查询到此人信息")
-      return "并没有插入数据"
-    }else{
-      console.log("数据库中查询不到此人信息")
-      // data为空
-      const {nickName,gender,avatarUrl} =event;
-      // 存入数据库
-      user.add({
-        data:{openid,avatarUrl,nickName,gender,location,star,credit}
-      }).then(res=>{
-        console.log("成功插入数据")
-        return "成功插入数据"
-      })
-    }
-  })
-
-  return "test"
+  //从event中获取参数 
+  const {nickName,avatarUrl,gender,location} =event
+  const credit =100 //未注册用户默认100
+  const star =[] //未注册用户默认未空
+  console.log(nickName)
+  const result =await user.where({openid:$.eq(openid)}).get()
+  if (result.data.length){
+    // data不为空，说明该用户已经注册过了
+    return result.data[0]
+  }else{
+    // data未查到，则首次登录需要插入数据
+    const isAdded =await user.add({
+      // 测试，还需要获取地理位置信息和收藏列表信息
+      data:{
+        openid:openid,
+        nickName:nickName,
+        avatarUrl:avatarUrl,
+        gender:gender,
+        credit:credit,
+        star:star,
+        location:location
+      }
+    })
+    return{openid:openid}
+  }
 }
