@@ -3,26 +3,35 @@
 		<image class="logo" src="/static/logo.png"></image>
 		<view>
 			<text class="title">{{title}}</text>
-			<button @click="getTest">点击测试</button>
+			<text>{{location}}</text>
+			<button @click="credit">点击打卡</button>
+			<button @click="login">点击登录</button>
 		</view>
 	</view>
 </template>
 
 <script>
-	// import {test} from "@/api/main.js"
+import {userLogin} from "@/api/userLogin.js"
+import {getLocation} from "@/api/getLocation.js"
 	export default {
 		data() {
 			return {
-				title: 'Hello'
+				title: '暂未登录',
+				location:"电子科技大学沙河足球场"
 			}
 		},
 		onLoad() {
 
 		},
 		methods: {
-			getTest(){
-				wx.cloud.callFunction({
-    				name:"main",
+			login(){
+				userLogin().then(res=>{
+					console.log(res)
+				})
+			},
+			credit(){
+				getLocation().then(res=>{
+					console.log(res)
 				})
 			}
 		}

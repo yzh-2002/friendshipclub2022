@@ -21,3 +21,8 @@ cloud.init({
 
 [云函数的数据库操作参考文档](https://developers.weixin.qq.com/miniprogram/dev/wxcloud/guide/database/init.html)
 
+### 文件夹含义
+
+- utils 工具类函数，放置一些封装的工具函数或者第三方sdk
+- api 存放负责调用云函数的业务处理函数
+
