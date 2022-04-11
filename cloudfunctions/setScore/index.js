@@ -25,7 +25,7 @@ exports.main = async (event, context) => {
       data: {
         scoreObj: {
           people: people + 1,
-          score: (playscore + score) / (people + 1),
+          score: (playscore + score) / 2,
         },
       },
     });
