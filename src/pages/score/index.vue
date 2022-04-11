@@ -29,7 +29,17 @@ export default {
           score: event.detail,
         },
         success: (res) => {
-          console.log(res);
+          if (res.result.status === "200") {
+            uni.showToast({
+              title: "打分成功",
+              duration: 2000,
+            });
+          } else {
+            uni.showToast({
+              title: "打分失败",
+              duration: 2000,
+            });
+          }
         },
         fail: (err) => {
           console.log(err);
