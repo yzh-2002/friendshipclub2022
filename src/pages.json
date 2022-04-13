@@ -1,12 +1,18 @@
 {
   "pages": [
     {
-      "path": "pages/score/index"
-    },
-    {
       "path": "pages/index/index",
       "style": {
-        "navigationBarTitleText": "uni-app"
+        "navigationBarTitleText": "友球汇",
+        "navigationBarBackgroundColor": "#1989FA",
+        "enablePullDownRefresh": true,
+        "navigationBarTextStyle": "white"
+      }
+    },
+    {
+      "path": "pages/playgroundDetail/playgroundDetail",
+      "style": {
+        "navigationBarTitleText": "球场详情"
       }
     }
   ],
@@ -16,7 +22,11 @@
     "navigationBarBackgroundColor": "#F8F8F8",
     "backgroundColor": "#F8F8F8",
     "usingComponents": {
-      "van-rate": "/wxcomponents/vant/dist/rate/index"
+      "van-rate": "/wxcomponents/dist/rate/index",
+      "van-tag": "/wxcomponents/dist/tag/index",
+      "van-button": "/wxcomponents/dist/button/index",
+      "van-icon": "/wxcomponents/dist/icon/index",
+      "van-overlay": "/wxcomponents/dist/overlay/index"
     }
   }
 }
