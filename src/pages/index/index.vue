@@ -48,8 +48,9 @@ export default {
           this.playground = res.result.data;
         },
         fail: (err) => {
-          uni.showLoading({
-            title: "加载中",
+          uni.showToast({
+            title: "请求失败",
+            icon: "error",
             duration: 2000,
           });
         },
