@@ -15,31 +15,31 @@
         </view>
         <view class="infoitem">
           <view class="itemtitle">
-            <van-icon name="wap-home-o" size="40rpx" id="icon"></van-icon>
+            <van-icon name="comment-o" size="40rpx" id="icon"></van-icon>
             联系方式
           </view>
           <view class="iteminfo">1647652643</view>
         </view>
         <view class="infoitem">
           <view class="itemtitle">
-            <van-icon name="wap-home-o" size="40rpx" id="icon"></van-icon>
+            <van-icon name="clock-o" size="40rpx" id="icon"></van-icon>
             营业时间
           </view>
           <view class="iteminfo">10:00-22:00</view>
         </view>
         <view class="infoitem">
           <view class="itemtitle">
-            <van-icon name="wap-home-o" size="40rpx" id="icon"></van-icon>
+            <van-icon name="gold-coin-o" size="40rpx" id="icon"></van-icon>
             球场费用
           </view>
           <view class="iteminfo">￥{{ data.price }}</view>
         </view>
         <view class="infoitem">
           <view class="itemtitle">
-            <van-icon name="wap-home-o" size="40rpx" id="icon"></van-icon>
+            <van-icon name="star-o" size="40rpx" id="icon"></van-icon>
             球场评分
           </view>
-          <view class="iteminfo">{{ data.scoreObj.score }}分</view>
+          <view class="iteminfo">{{ score }}分</view>
         </view>
       </view>
     </view>
@@ -47,21 +47,24 @@
     <view class="notice"></view>
     <view class="button">
       <van-button round type="info" plain @click="star">点我收藏</van-button>
-      <van-button round type="info" plain @click="setScore"
+      <van-button round type="info" plain @click="setScore" :disabled="disabled"
         >点我评分</van-button
       >
     </view>
     <van-overlay :show="show">
       <view class="ratebox">
-        <van-rate
-          :value="value"
-          :size="40"
-          color="#ffd21e"
-          void-icon="star"
-          void-color="#eee"
-          @change="onChange"
-          class="rate"
-        />
+        <view class="rateboxtitle">请评分</view>
+        <view class="rate">
+          <van-rate
+            :value="value"
+            :size="40"
+            color="#ffd21e"
+            void-icon="star"
+            void-color="#eee"
+            @change="onChange"
+            class="rate"
+          />
+        </view>
       </view>
     </van-overlay>
   </view>
@@ -76,11 +79,18 @@ export default {
       data: {},
       show: false,
       value: 3,
+      disabled: false,
     };
   },
   onLoad(options) {
     this.id = options.id;
     this.getplaygroundDetail();
+  },
+  computed: {
+    score() {
+      //将分数保留一位小数
+      return this.data.scoreObj.score.toFixed(1);
+    },
   },
   methods: {
     getplaygroundDetail() {
@@ -93,7 +103,11 @@ export default {
           this.data = res.result.data[0];
         },
         fail: (err) => {
-          console.log(err);
+          uni.showToast({
+            title: "请求失败",
+            icon: "error",
+            duration: 2000,
+          });
         },
       });
     },
@@ -109,7 +123,7 @@ export default {
         name: "setScore",
         data: {
           openid: "111",
-          _id: "78d8343762528bfb0003c2f92f09dbb6",
+          _id: this.data._id,
           score: event.detail,
         },
         success: (res) => {
@@ -121,15 +135,22 @@ export default {
           } else {
             uni.showToast({
               title: "打分失败",
+              icon: "error",
               duration: 2000,
             });
           }
         },
         fail: (err) => {
-          console.log(err);
+          uni.showToast({
+            title: "打分失败",
+            icon: "error",
+            duration: 2000,
+          });
         },
         complete: () => {
           this.show = false;
+          this.disabled = true;
+          this.getplaygroundDetail(); //重新获取打分后的分数
         },
       });
     },
@@ -171,7 +192,7 @@ export default {
   width: 640rpx;
   height: 600rpx;
   margin: 60rpx auto;
-  border: 1px solid #eee;
+  border: 2rpx solid #eee;
   border-radius: 40rpx;
   box-shadow: 4rpx 8rpx 20rpx #888888;
 }
@@ -183,7 +204,7 @@ export default {
 .infobox .infoitem {
   width: 100%;
   height: 104rpx;
-  border-bottom: 1px solid #eee;
+  border-bottom: 2rpx solid #eee;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -201,9 +222,10 @@ export default {
 }
 .button {
   width: 100%;
-  height: 100rpx;
+  height: 120rpx;
   display: flex;
   justify-content: space-around;
+  align-items: center;
   position: fixed;
   bottom: 0;
   background-color: #f4f4f4;
@@ -211,22 +233,32 @@ export default {
 .notice {
   width: 560rpx;
   height: 80rpx;
-  margin: 20rpx auto 160rpx;
+  margin: 20rpx auto 180rpx;
   border-radius: 40rpx;
   box-shadow: 4rpx 8rpx 20rpx #888888;
 }
 .ratebox {
   width: 600rpx;
-  height: 120rpx;
+  height: 200rpx;
   background-color: #fff;
   border-radius: 40rpx;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   position: absolute;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
+}
+.rateboxtitle {
+  margin: 30rpx auto 0;
+  text-align: center;
+  height: 40rpx;
+  line-height: 40rpx;
+  font-size: 40rpx;
+  font-weight: 700;
+}
+.rate {
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
 }
 </style>
 

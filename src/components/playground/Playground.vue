@@ -45,7 +45,7 @@ export default {
   display: flex;
   border-radius: 60rpx;
   overflow: hidden;
-  border: 1px solid #eee;
+  border: 2rpx solid #eee;
   box-shadow: 12rpx 12rpx 20rpx #888888;
 }
 .leftimg {
