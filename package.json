@@ -63,9 +63,11 @@
     "@dcloudio/uni-quickapp-native": "^2.0.1-33920220314003",
     "@dcloudio/uni-quickapp-webview": "^2.0.1-33920220314003",
     "@dcloudio/uni-stat": "^2.0.1-33920220314003",
+    "@vant/weapp": "^1.10.2",
     "@vue/shared": "^3.0.0",
     "core-js": "^3.6.5",
     "flyio": "^0.6.2",
+    "miniprogram-sm-crypto": "^0.3.7",
     "regenerator-runtime": "^0.12.1",
     "vue": "^2.6.11",
     "vuex": "^3.2.0"
@@ -99,5 +101,17 @@
   ],
   "uni-app": {
     "scripts": {}
-  }
+  },
+  "description": "> 友球会2022，学生在线约球，商家可在线注册为学生运动提供更多场地....",
+  "main": ".eslintrc.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yzh-2002/friendshipclub2022.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/yzh-2002/friendshipclub2022/issues"
+  },
+  "homepage": "https://github.com/yzh-2002/friendshipclub2022#readme"
 }
