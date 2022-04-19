@@ -2,6 +2,7 @@
   "pages": [
     "pages/conTest/Detail",
     "pages/fontPage/index",
+    "pages/playgroundDetail/playgroundDetail",
     "pages/conTest/index",
     "pages/proFile/index"
   ],

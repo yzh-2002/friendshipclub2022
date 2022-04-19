@@ -1,4 +1,7 @@
 {
   "navigationBarTitleText": "球场列表",
+  "navigationBarBackgroundColor": "#1989FA",
+  "enablePullDownRefresh": true,
+  "navigationBarTextStyle": "white",
   "usingComponents": {}
 }
