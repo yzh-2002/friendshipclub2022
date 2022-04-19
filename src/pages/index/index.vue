@@ -3,37 +3,40 @@
 		<image class="logo" src="/static/logo.png"></image>
 		<view>
 			<text class="title">{{title}}</text>
-			<button id="joinBall" @click=joinBall>click here</button>
+			<button @click="test">点击打卡</button>
+			<button @click="login">点击登录</button>
 		</view>
 	</view>
 </template>
 
 <script>
-
-	// import {test} from "@/api/main.js"
+import Vue from "vue"
+import {userLogin} from "@/api/userLogin.js"
+import {GetLocation} from "../../../utils/Applets/reverseGeocoder"
+import {CalculateDistance} from "../../../utils/Applets/calculateDistance"
 	export default {
 		data() {
 			return {
-				title: 'Hello'
+				title: '暂未登录',
 			}
 		},
 		onLoad() {
 
 		},
 		methods: {
-      joinBall() {
-        wx.cloud.callFunction({
-          name: 'getMatch',
-          data:{
-            openId:'78d8343762528bfb0003c2f92f09dbb6',
-            _id:'78d834376252d08c000d54d26d8305cd',
-            a:1
-          }
-        }).then(res=>{
-          console.log(res)
-
-        })
-			}
+			test(){
+				wx.cloud.callFunction({
+					name:"credit"
+				}).then(res=>{
+					console.log("正在计算距离......");
+					CalculateDistance([res.result.location])
+				})
+			},
+			login(){
+				userLogin().then(res=>{
+					console.log(res)
+				})
+			},
 		}
 	}
 </script>

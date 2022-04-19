@@ -51,6 +51,11 @@
 		"setting": {
 			"urlCheck": false
 		},
+		"permission": {
+			"scope.userLocation": {
+				"desc": "您的位置消息将用于小程序位置接口的效果展示"
+			}
+		},
 		"usingComponents": true
 	},
 	"mp-alipay": {

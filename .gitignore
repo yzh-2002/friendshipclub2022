@@ -1,7 +1,6 @@
 .DS_Store
 node_modules/
 unpackage/
-dist/
 cloudfunctions/**/node_modules
 
 # local env files

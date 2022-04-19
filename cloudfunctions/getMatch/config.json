@@ -1,6 +1,7 @@
 {
-  "permissions": {
-    "openapi": [
-    ]
+  "name": "$name$",
+  "version": "$version$",
+  "dependencies": {
+    $END$
   }
 }
