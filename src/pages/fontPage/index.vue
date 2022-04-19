@@ -60,9 +60,16 @@ export default {
       });
     },
     goDetail(id) {
-      uni.navigateTo({
-        url: `/pages/playgroundDetail/playgroundDetail?id=${id}`,
-      });
+      // uni.navigateTo({
+      //   // url: `/pages/playgroundDetail/playgroundDetail?id=${id}`,
+      //   url:"/pages/playgroundDetail",
+      //   success:()=>{
+      //   console.log("success!!");
+      // },fail:(err)=>{
+      //   console.log(err);
+      // }
+      // });
+      console.log("点击成功");
     },
   },
   components: {

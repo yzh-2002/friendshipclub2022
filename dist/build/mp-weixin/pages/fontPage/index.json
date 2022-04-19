@@ -3,5 +3,7 @@
   "navigationBarBackgroundColor": "#1989FA",
   "enablePullDownRefresh": true,
   "navigationBarTextStyle": "white",
-  "usingComponents": {}
+  "usingComponents": {
+    "playground": "/components/playground/Playground"
+  }
 }

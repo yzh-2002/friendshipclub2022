@@ -1,10 +1,12 @@
 {
   "pages": [
-    "pages/conTest/Detail",
     "pages/fontPage/index",
     "pages/playgroundDetail/playgroundDetail",
     "pages/conTest/index",
-    "pages/proFile/index"
+    "pages/conTest/Detail",
+    "pages/userHome/userHome",
+    "pages/userHome/navigatorPages/aboutUs",
+    "pages/userHome/navigatorPages/starGround"
   ],
   "subPackages": [],
   "window": {
@@ -24,10 +26,11 @@
         "text": "我的比赛"
       },
       {
-        "pagePath": "pages/proFile/index",
-        "text": "个人首页"
+        "pagePath": "pages/userHome/userHome",
+        "text": "个人主页"
       }
-    ]
+    ],
+    "backgroundColor": "#F8F8F8"
   },
   "permission": {
     "scope.userLocation": {
