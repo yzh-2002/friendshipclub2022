@@ -5,12 +5,32 @@
 			"style": {
 				"navigationBarTitleText": "uni-app"
 			}
+		},
+		{
+			"path": "pages/userHome/userHome",
+			"style": {
+				"navigationBarTitleText": "个人主页"
+			}
+		},{
+			"path": "pages/userHome/navigatorPages/aboutUs",
+			"style": {
+				"navigationBarTitleText": "关于我们"
+			}
 		}
 	],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "uni-app",
 		"navigationBarBackgroundColor": "#F8F8F8",
-		"backgroundColor": "#F8F8F8"
+		"backgroundColor": "#F8F8F8",
+		"usingComponents": {
+			"van-button": "/wxcomponents/dist/button/index",
+			"van-cell": "/wxcomponents/dist/cell/index",
+			"van-cell-group": "/wxcomponents/dist/cell-group/index",
+			"van-image": "/wxcomponents/dist/image/index",
+			"van-grid": "/wxcomponents/dist/grid/index",
+			"van-grid-item": "/wxcomponents/dist/grid-item/index",
+			"van-action-sheet": "/wxcomponents/dist/action-sheet/index"
+		}
 	}
 }

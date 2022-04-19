@@ -1,5 +1,6 @@
 <template>
-123
+  <span>邮箱：xxxx</span><br>
+  <span>电话：xxx</span>
 </template>
 
 <script>

@@ -1,6 +1,8 @@
 {
   "pages": [
-    "pages/index/index"
+    "pages/index/index",
+    "pages/userHome/userHome",
+    "pages/userHome/navigatorPages/aboutUs"
   ],
   "subPackages": [],
   "window": {
@@ -14,5 +16,13 @@
       "desc": "您的位置消息将用于小程序位置接口的效果展示"
     }
   },
-  "usingComponents": {}
+  "usingComponents": {
+    "van-button": "/wxcomponents/dist/button/index",
+    "van-cell": "/wxcomponents/dist/cell/index",
+    "van-cell-group": "/wxcomponents/dist/cell-group/index",
+    "van-image": "/wxcomponents/dist/image/index",
+    "van-grid": "/wxcomponents/dist/grid/index",
+    "van-grid-item": "/wxcomponents/dist/grid-item/index",
+    "van-action-sheet": "/wxcomponents/dist/action-sheet/index"
+  }
 }
