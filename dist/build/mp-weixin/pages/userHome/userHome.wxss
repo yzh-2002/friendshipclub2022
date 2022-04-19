@@ -1,0 +1,13 @@
+
+.userBars.data-v-5722c9c6 {
+  text-align: center;
+}
+.avatar.data-v-5722c9c6 {
+  border: 1px solid red;
+}
+.userMsg.data-v-5722c9c6 {
+  position: relative;
+  top: 5rem;
+}
+
+
