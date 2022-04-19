@@ -89,7 +89,7 @@ export default {
   computed: {
     score() {
       //将分数保留一位小数
-      return this.data.scoreObj.score.toFixed(1);
+      return (this.data.scoreObj.score / this.data.scoreObj.people).toFixed(1);
     },
   },
   methods: {
@@ -132,9 +132,15 @@ export default {
               title: "打分成功",
               duration: 2000,
             });
-          } else {
+          } else if (res.result.status === "200") {
             uni.showToast({
               title: "打分失败",
+              icon: "error",
+              duration: 2000,
+            });
+          } else {
+            uni.showToast({
+              title: "请先登录",
               icon: "error",
               duration: 2000,
             });
@@ -149,7 +155,6 @@ export default {
         },
         complete: () => {
           this.show = false;
-          this.disabled = true;
           this.getplaygroundDetail(); //重新获取打分后的分数
         },
       });

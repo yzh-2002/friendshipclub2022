@@ -3,7 +3,7 @@
     {
       "path": "pages/index/index",
       "style": {
-        "navigationBarTitleText": "友球汇",
+        "navigationBarTitleText": "友球会",
         "navigationBarBackgroundColor": "#1989FA",
         "enablePullDownRefresh": true,
         "navigationBarTextStyle": "white"

@@ -25,7 +25,7 @@ exports.main = async (event, context) => {
       data: {
         scoreObj: {
           people: people + 1,
-          score: (playscore + score) / 2,
+          score: playscore + score,
         },
       },
     });
@@ -35,6 +35,6 @@ exports.main = async (event, context) => {
       return { status: "400", msg: "打分失败!" };
     }
   } else {
-    return { status: "400", msg: "打分失败!" };
+    return { status: "401", msg: "用户不存在!" };
   }
 };

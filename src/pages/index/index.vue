@@ -10,13 +10,16 @@
       indicator-active-color="#1989fa"
     >
       <swiper-item class="swiper-item">
-        <image src="https://s2.loli.net/2022/04/12/Wle9pEFMOxNSCIU.png"></image>
+        <image src="../../static/img/1.png"></image>
       </swiper-item>
       <swiper-item class="swiper-item">
-        <image src="https://s2.loli.net/2022/04/12/Wle9pEFMOxNSCIU.png"></image>
+        <image src="../../static/img/2.png"></image>
       </swiper-item>
       <swiper-item class="swiper-item">
-        <image src="https://s2.loli.net/2022/04/12/Wle9pEFMOxNSCIU.png"></image>
+        <image src="../../static/img/3.png"></image>
+      </swiper-item>
+      <swiper-item class="swiper-item">
+        <image src="../../static/img/4.png"></image>
       </swiper-item>
     </swiper>
     <view class="title">球场列表</view>
