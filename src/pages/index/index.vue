@@ -5,6 +5,7 @@
 			<text class="title">{{title}}</text>
 			<button @click="test">点击打卡</button>
 			<button @click="login">点击登录</button>
+<!--      <button @click="toUserHome">点击跳转</button>-->
 		</view>
 	</view>
 </template>
@@ -37,6 +38,11 @@ import {CalculateDistance} from "../../../utils/Applets/calculateDistance"
 					console.log(res)
 				})
 			},
+      // toUserHome(){
+			//   wx.navigateTo({
+      //     url:"../userHome/userHome"
+      //   })
+      // }
 		}
 	}
 </script>

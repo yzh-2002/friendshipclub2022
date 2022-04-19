@@ -11,19 +11,10 @@ exports.main = async (event,context)=>{
     const db = cloud.database();
     const _ = db.command;//获取数据库操作方法
 
-    let {openId,_id} = event;
+    let {_id} = event;
     //openId是需要push进的playground的对象
     //_id是用户的id,需要被存进playground对象里
     const user = await db.collection('user').doc(_id).get()
 
-    if (user.data){
-        await db.collection('playground').doc(openId).update({
-            data: {
-                person:_.push(_id)
-            }
-        })
-
-        return {status:200,msg:'success'}
-    }
-
+    return user
 }

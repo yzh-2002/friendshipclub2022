@@ -7,6 +7,7 @@ cloud.init({
 
 // 云函数入口函数
 exports.main = async (event, context) => {
+  console.log("credit")
   const wxContext = cloud.getWXContext()
   // 获取打卡场地的坐标
   const db =cloud.database()
