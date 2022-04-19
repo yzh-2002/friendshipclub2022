@@ -1,6 +1,9 @@
 {
   "pages": [
-    "pages/index/index"
+    "pages/conTest/Detail",
+    "pages/fontPage/index",
+    "pages/conTest/index",
+    "pages/proFile/index"
   ],
   "subPackages": [],
   "window": {
@@ -8,6 +11,22 @@
     "navigationBarTitleText": "uni-app",
     "navigationBarBackgroundColor": "#F8F8F8",
     "backgroundColor": "#F8F8F8"
+  },
+  "tabBar": {
+    "list": [
+      {
+        "pagePath": "pages/fontPage/index",
+        "text": "球场列表"
+      },
+      {
+        "pagePath": "pages/conTest/index",
+        "text": "我的比赛"
+      },
+      {
+        "pagePath": "pages/proFile/index",
+        "text": "个人首页"
+      }
+    ]
   },
   "permission": {
     "scope.userLocation": {

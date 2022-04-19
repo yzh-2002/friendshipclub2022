@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "我的比赛",
+  "usingComponents": {
+    "van-button": "/wxcomponents/@vant/dist/button/index",
+    "contest": "/pages/conTest/Contest"
+  }
+}

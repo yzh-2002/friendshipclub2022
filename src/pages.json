@@ -1,9 +1,40 @@
 {
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
 		{
-			"path": "pages/index/index",
+			"path":"pages/conTest/Detail",
+			"style":{
+				"navigationBarTitleText":"比赛详情",
+				"usingComponents":{
+					"van-cell":"/wxcomponents/@vant/dist/cell/index",
+					"van-button":"/wxcomponents/@vant/dist/button/index"
+				}
+			}
+		},
+		{
+			"path": "pages/fontPage/index",
 			"style": {
-				"navigationBarTitleText": "uni-app"
+				"navigationBarTitleText": "球场列表"
+			}
+		},
+		{
+			"path":"pages/conTest/index",
+			"style":{
+				"navigationBarTitleText":"我的比赛",
+				"usingComponents":{
+					"van-button":"/wxcomponents/@vant/dist/button/index"
+				}
+			}
+		},
+		// {
+		// 	"path":"pages/conTest/Detail",
+		// 	"style":{
+		// 		"navigationBarTitleText":"比赛详情"
+		// 	}
+		// },
+		{
+			"path":"pages/proFile/index",
+			"style":{
+				"navigationBarTitleText":"个人信息"
 			}
 		}
 	],
@@ -12,5 +43,21 @@
 		"navigationBarTitleText": "uni-app",
 		"navigationBarBackgroundColor": "#F8F8F8",
 		"backgroundColor": "#F8F8F8"
+	},
+	"tabBar":{
+		"list":[
+			{
+				"pagePath":"pages/fontPage/index",
+				"text":"球场列表"
+			},
+			{
+				"pagePath":"pages/conTest/index",
+				"text":"我的比赛"
+			},
+			{
+				"pagePath":"pages/proFile/index",
+				"text":"个人首页"
+			}
+		]
 	}
 }

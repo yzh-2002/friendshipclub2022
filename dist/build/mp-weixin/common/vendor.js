@@ -1,6 +1,6 @@
-(global["webpackJsonp"] = global["webpackJsonp"] || []).push([["common/vendor"],[
-/* 0 */,
-/* 1 */
+(global["webpackJsonp"] = global["webpackJsonp"] || []).push([["common/vendor"],{
+
+/***/ 1:
 /*!************************************************************!*\
   !*** ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js ***!
   \************************************************************/
@@ -2262,7 +2262,137 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../webpack/buildin/global.js */ 2)))
 
 /***/ }),
-/* 2 */
+
+/***/ 11:
+/*!**********************************************************************************************************!*\
+  !*** ./node_modules/@dcloudio/vue-cli-plugin-uni/packages/vue-loader/lib/runtime/componentNormalizer.js ***!
+  \**********************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return normalizeComponent; });
+/* globals __VUE_SSR_CONTEXT__ */
+
+// IMPORTANT: Do NOT use ES2015 features in this file (except for modules).
+// This module is a runtime utility for cleaner component module output and will
+// be included in the final webpack user bundle.
+
+function normalizeComponent (
+  scriptExports,
+  render,
+  staticRenderFns,
+  functionalTemplate,
+  injectStyles,
+  scopeId,
+  moduleIdentifier, /* server only */
+  shadowMode, /* vue-cli only */
+  components, // fixed by xxxxxx auto components
+  renderjs // fixed by xxxxxx renderjs
+) {
+  // Vue.extend constructor export interop
+  var options = typeof scriptExports === 'function'
+    ? scriptExports.options
+    : scriptExports
+
+  // fixed by xxxxxx auto components
+  if (components) {
+    if (!options.components) {
+      options.components = {}
+    }
+    var hasOwn = Object.prototype.hasOwnProperty
+    for (var name in components) {
+      if (hasOwn.call(components, name) && !hasOwn.call(options.components, name)) {
+        options.components[name] = components[name]
+      }
+    }
+  }
+  // fixed by xxxxxx renderjs
+  if (renderjs) {
+    (renderjs.beforeCreate || (renderjs.beforeCreate = [])).unshift(function() {
+      this[renderjs.__module] = this
+    });
+    (options.mixins || (options.mixins = [])).push(renderjs)
+  }
+
+  // render functions
+  if (render) {
+    options.render = render
+    options.staticRenderFns = staticRenderFns
+    options._compiled = true
+  }
+
+  // functional template
+  if (functionalTemplate) {
+    options.functional = true
+  }
+
+  // scopedId
+  if (scopeId) {
+    options._scopeId = 'data-v-' + scopeId
+  }
+
+  var hook
+  if (moduleIdentifier) { // server build
+    hook = function (context) {
+      // 2.3 injection
+      context =
+        context || // cached call
+        (this.$vnode && this.$vnode.ssrContext) || // stateful
+        (this.parent && this.parent.$vnode && this.parent.$vnode.ssrContext) // functional
+      // 2.2 with runInNewContext: true
+      if (!context && typeof __VUE_SSR_CONTEXT__ !== 'undefined') {
+        context = __VUE_SSR_CONTEXT__
+      }
+      // inject component styles
+      if (injectStyles) {
+        injectStyles.call(this, context)
+      }
+      // register component module identifier for async chunk inferrence
+      if (context && context._registeredComponents) {
+        context._registeredComponents.add(moduleIdentifier)
+      }
+    }
+    // used by ssr in case component is cached and beforeCreate
+    // never gets called
+    options._ssrRegister = hook
+  } else if (injectStyles) {
+    hook = shadowMode
+      ? function () { injectStyles.call(this, this.$root.$options.shadowRoot) }
+      : injectStyles
+  }
+
+  if (hook) {
+    if (options.functional) {
+      // for template-only hot-reload because in that case the render fn doesn't
+      // go through the normalizer
+      options._injectStyles = hook
+      // register for functioal component in vue file
+      var originalRender = options.render
+      options.render = function renderWithStyleInjection (h, context) {
+        hook.call(context)
+        return originalRender(h, context)
+      }
+    } else {
+      // inject component registration as beforeCreate hook
+      var existing = options.beforeCreate
+      options.beforeCreate = existing
+        ? [].concat(existing, hook)
+        : [hook]
+    }
+  }
+
+  return {
+    exports: scriptExports,
+    options: options
+  }
+}
+
+
+/***/ }),
+
+/***/ 2:
 /*!***********************************!*\
   !*** (webpack)/buildin/global.js ***!
   \***********************************/
@@ -2292,7 +2422,857 @@ module.exports = g;
 
 
 /***/ }),
-/* 3 */
+
+/***/ 26:
+/*!******************************!*\
+  !*** ./src/api/userLogin.js ***!
+  \******************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(uni) {
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.userLogin = userLogin;
+
+var _vue = _interopRequireDefault(__webpack_require__(/*! vue */ 3));
+
+var _reverseGeocoder = __webpack_require__(/*! ../../utils/Applets/reverseGeocoder */ 27);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+// 注意api中函数和云函数的区别：
+// 经过云函数和直接操作数据库差别在于前者权限多，并且更加安全
+function userLogin() {
+  return new Promise(function (resolve, reject) {
+    uni.showModal({
+      title: "温馨提示",
+      content: "请登录",
+      success: function success(res) {
+        if (res.confirm) {
+          uni.getUserProfile({
+            desc: "注册用户信息使用",
+            lang: "zh_CN",
+            success: function success(res) {
+              // 除了获取用户信息外，还需要获取用户所处位置
+              (0, _reverseGeocoder.GetLocation)().then(function (locat) {
+                // 挂载到全局对象上
+                _vue.default.prototype.userInformation = {
+                  nickName: res.userInfo.nickName,
+                  gender: res.userInfo.gender,
+                  avatarUrl: res.userInfo.avatarUrl,
+                  location: {
+                    latitude: locat.latitude,
+                    longitude: locat.longitude
+                  },
+                  star: [],
+                  credit: 100,
+                  openid: ""
+                };
+                wx.cloud.callFunction({
+                  name: "userLogin",
+                  data: {
+                    nickName: res.userInfo.nickName,
+                    gender: res.userInfo.gender,
+                    avatarUrl: res.userInfo.avatarUrl,
+                    location: {
+                      latitude: locat.latitude,
+                      longitude: locat.longitude
+                    }
+                  }
+                }).then(function (res) {
+                  resolve(res);
+                }).catch(function (err) {
+                  reject(err);
+                });
+              });
+            }
+          });
+        }
+      }
+    });
+  });
+}
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
+
+/***/ }),
+
+/***/ 27:
+/*!******************************************!*\
+  !*** ./utils/Applets/reverseGeocoder.js ***!
+  \******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(uni) {
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.GetLocation = GetLocation;
+exports.ReverseGeocoder = ReverseGeocoder;
+
+// 负责获取位置坐标（gps二元组）以及封装gps坐标转换成真实坐标
+// 腾讯地图接口
+var QQMapWX = __webpack_require__(/*! ../qqMap/qqmap-wx-jssdk.min.js */ 28);
+
+var qqmapsdk = new QQMapWX({
+  key: "RIDBZ-YN3KK-SBAJM-ADSAV-2U427-ZJBCM"
+}); // 获取gps信息（弹窗申请等等）
+
+function GetLocation() {
+  return new Promise(function (resolve, reject) {
+    uni.getSetting({
+      success: function success(res) {
+        if (res.authSetting['scope.userLocation']) {
+          uni.authorize({
+            scope: "scope.userLocation",
+            success: function success() {
+              uni.getLocation({
+                type: 'wgs84',
+                success: function success(res) {
+                  resolve(res);
+                }
+              });
+            },
+            fail: function fail(err) {
+              reject(err);
+            }
+          });
+        } else {
+          // 需要提示他一些功能无法使用
+          console.log("未授权");
+        }
+      }
+    });
+  });
+}
+
+function ReverseGeocoder(_ref) {
+  var latitude = _ref.latitude,
+      longitude = _ref.longitude;
+  qqmapsdk.reverseGeocoder({
+    location: {
+      latitude: latitude,
+      longitude: longitude
+    },
+    success: function success(result) {
+      console.log(result);
+    },
+    fail: function fail(err) {
+      console.log(err);
+    },
+    complete: function complete(data) {
+      console.log(data);
+    }
+  });
+}
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
+
+/***/ }),
+
+/***/ 28:
+/*!*******************************************!*\
+  !*** ./utils/qqMap/qqmap-wx-jssdk.min.js ***!
+  \*******************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
+
+var ERROR_CONF = {
+  KEY_ERR: 311,
+  KEY_ERR_MSG: 'key格式错误',
+  PARAM_ERR: 310,
+  PARAM_ERR_MSG: '请求参数信息有误',
+  SYSTEM_ERR: 600,
+  SYSTEM_ERR_MSG: '系统错误',
+  WX_ERR_CODE: 1000,
+  WX_OK_CODE: 200
+};
+var BASE_URL = 'https://apis.map.qq.com/ws/';
+var URL_SEARCH = BASE_URL + 'place/v1/search';
+var URL_SUGGESTION = BASE_URL + 'place/v1/suggestion';
+var URL_GET_GEOCODER = BASE_URL + 'geocoder/v1/';
+var URL_CITY_LIST = BASE_URL + 'district/v1/list';
+var URL_AREA_LIST = BASE_URL + 'district/v1/getchildren';
+var URL_DISTANCE = BASE_URL + 'distance/v1/';
+var EARTH_RADIUS = 6378136.49;
+var Utils = {
+  location2query: function location2query(data) {
+    if (typeof data == 'string') {
+      return data;
+    }
+
+    var query = '';
+
+    for (var i = 0; i < data.length; i++) {
+      var d = data[i];
+
+      if (!!query) {
+        query += ';';
+      }
+
+      if (d.location) {
+        query = query + d.location.lat + ',' + d.location.lng;
+      }
+
+      if (d.latitude && d.longitude) {
+        query = query + d.latitude + ',' + d.longitude;
+      }
+    }
+
+    return query;
+  },
+  rad: function rad(d) {
+    return d * Math.PI / 180.0;
+  },
+  getEndLocation: function getEndLocation(location) {
+    var to = location.split(';');
+    var endLocation = [];
+
+    for (var i = 0; i < to.length; i++) {
+      endLocation.push({
+        lat: parseFloat(to[i].split(',')[0]),
+        lng: parseFloat(to[i].split(',')[1])
+      });
+    }
+
+    return endLocation;
+  },
+  getDistance: function getDistance(latFrom, lngFrom, latTo, lngTo) {
+    var radLatFrom = this.rad(latFrom);
+    var radLatTo = this.rad(latTo);
+    var a = radLatFrom - radLatTo;
+    var b = this.rad(lngFrom) - this.rad(lngTo);
+    var distance = 2 * Math.asin(Math.sqrt(Math.pow(Math.sin(a / 2), 2) + Math.cos(radLatFrom) * Math.cos(radLatTo) * Math.pow(Math.sin(b / 2), 2)));
+    distance = distance * EARTH_RADIUS;
+    distance = Math.round(distance * 10000) / 10000;
+    return parseFloat(distance.toFixed(0));
+  },
+  getWXLocation: function getWXLocation(success, fail, complete) {
+    wx.getLocation({
+      type: 'gcj02',
+      success: success,
+      fail: fail,
+      complete: complete
+    });
+  },
+  getLocationParam: function getLocationParam(location) {
+    if (typeof location == 'string') {
+      var locationArr = location.split(',');
+
+      if (locationArr.length === 2) {
+        location = {
+          latitude: location.split(',')[0],
+          longitude: location.split(',')[1]
+        };
+      } else {
+        location = {};
+      }
+    }
+
+    return location;
+  },
+  polyfillParam: function polyfillParam(param) {
+    param.success = param.success || function () {};
+
+    param.fail = param.fail || function () {};
+
+    param.complete = param.complete || function () {};
+  },
+  checkParamKeyEmpty: function checkParamKeyEmpty(param, key) {
+    if (!param[key]) {
+      var errconf = this.buildErrorConfig(ERROR_CONF.PARAM_ERR, ERROR_CONF.PARAM_ERR_MSG + key + '参数格式有误');
+      param.fail(errconf);
+      param.complete(errconf);
+      return true;
+    }
+
+    return false;
+  },
+  checkKeyword: function checkKeyword(param) {
+    return !this.checkParamKeyEmpty(param, 'keyword');
+  },
+  checkLocation: function checkLocation(param) {
+    var location = this.getLocationParam(param.location);
+
+    if (!location || !location.latitude || !location.longitude) {
+      var errconf = this.buildErrorConfig(ERROR_CONF.PARAM_ERR, ERROR_CONF.PARAM_ERR_MSG + ' location参数格式有误');
+      param.fail(errconf);
+      param.complete(errconf);
+      return false;
+    }
+
+    return true;
+  },
+  buildErrorConfig: function buildErrorConfig(errCode, errMsg) {
+    return {
+      status: errCode,
+      message: errMsg
+    };
+  },
+  handleData: function handleData(param, data, feature) {
+    if (feature === 'search') {
+      var searchResult = data.data;
+      var searchSimplify = [];
+
+      for (var i = 0; i < searchResult.length; i++) {
+        searchSimplify.push({
+          id: searchResult[i].id || null,
+          title: searchResult[i].title || null,
+          latitude: searchResult[i].location && searchResult[i].location.lat || null,
+          longitude: searchResult[i].location && searchResult[i].location.lng || null,
+          address: searchResult[i].address || null,
+          category: searchResult[i].category || null,
+          tel: searchResult[i].tel || null,
+          adcode: searchResult[i].ad_info && searchResult[i].ad_info.adcode || null,
+          city: searchResult[i].ad_info && searchResult[i].ad_info.city || null,
+          district: searchResult[i].ad_info && searchResult[i].ad_info.district || null,
+          province: searchResult[i].ad_info && searchResult[i].ad_info.province || null
+        });
+      }
+
+      param.success(data, {
+        searchResult: searchResult,
+        searchSimplify: searchSimplify
+      });
+    } else if (feature === 'suggest') {
+      var suggestResult = data.data;
+      var suggestSimplify = [];
+
+      for (var i = 0; i < suggestResult.length; i++) {
+        suggestSimplify.push({
+          adcode: suggestResult[i].adcode || null,
+          address: suggestResult[i].address || null,
+          category: suggestResult[i].category || null,
+          city: suggestResult[i].city || null,
+          district: suggestResult[i].district || null,
+          id: suggestResult[i].id || null,
+          latitude: suggestResult[i].location && suggestResult[i].location.lat || null,
+          longitude: suggestResult[i].location && suggestResult[i].location.lng || null,
+          province: suggestResult[i].province || null,
+          title: suggestResult[i].title || null,
+          type: suggestResult[i].type || null
+        });
+      }
+
+      param.success(data, {
+        suggestResult: suggestResult,
+        suggestSimplify: suggestSimplify
+      });
+    } else if (feature === 'reverseGeocoder') {
+      var reverseGeocoderResult = data.result;
+      var reverseGeocoderSimplify = {
+        address: reverseGeocoderResult.address || null,
+        latitude: reverseGeocoderResult.location && reverseGeocoderResult.location.lat || null,
+        longitude: reverseGeocoderResult.location && reverseGeocoderResult.location.lng || null,
+        adcode: reverseGeocoderResult.ad_info && reverseGeocoderResult.ad_info.adcode || null,
+        city: reverseGeocoderResult.address_component && reverseGeocoderResult.address_component.city || null,
+        district: reverseGeocoderResult.address_component && reverseGeocoderResult.address_component.district || null,
+        nation: reverseGeocoderResult.address_component && reverseGeocoderResult.address_component.nation || null,
+        province: reverseGeocoderResult.address_component && reverseGeocoderResult.address_component.province || null,
+        street: reverseGeocoderResult.address_component && reverseGeocoderResult.address_component.street || null,
+        street_number: reverseGeocoderResult.address_component && reverseGeocoderResult.address_component.street_number || null,
+        recommend: reverseGeocoderResult.formatted_addresses && reverseGeocoderResult.formatted_addresses.recommend || null,
+        rough: reverseGeocoderResult.formatted_addresses && reverseGeocoderResult.formatted_addresses.rough || null
+      };
+
+      if (reverseGeocoderResult.pois) {
+        var pois = reverseGeocoderResult.pois;
+        var poisSimplify = [];
+
+        for (var i = 0; i < pois.length; i++) {
+          poisSimplify.push({
+            id: pois[i].id || null,
+            title: pois[i].title || null,
+            latitude: pois[i].location && pois[i].location.lat || null,
+            longitude: pois[i].location && pois[i].location.lng || null,
+            address: pois[i].address || null,
+            category: pois[i].category || null,
+            adcode: pois[i].ad_info && pois[i].ad_info.adcode || null,
+            city: pois[i].ad_info && pois[i].ad_info.city || null,
+            district: pois[i].ad_info && pois[i].ad_info.district || null,
+            province: pois[i].ad_info && pois[i].ad_info.province || null
+          });
+        }
+
+        param.success(data, {
+          reverseGeocoderResult: reverseGeocoderResult,
+          reverseGeocoderSimplify: reverseGeocoderSimplify,
+          pois: pois,
+          poisSimplify: poisSimplify
+        });
+      } else {
+        param.success(data, {
+          reverseGeocoderResult: reverseGeocoderResult,
+          reverseGeocoderSimplify: reverseGeocoderSimplify
+        });
+      }
+    } else if (feature === 'geocoder') {
+      var geocoderResult = data.result;
+      var geocoderSimplify = {
+        title: geocoderResult.title || null,
+        latitude: geocoderResult.location && geocoderResult.location.lat || null,
+        longitude: geocoderResult.location && geocoderResult.location.lng || null,
+        adcode: geocoderResult.ad_info && geocoderResult.ad_info.adcode || null,
+        province: geocoderResult.address_components && geocoderResult.address_components.province || null,
+        city: geocoderResult.address_components && geocoderResult.address_components.city || null,
+        district: geocoderResult.address_components && geocoderResult.address_components.district || null,
+        street: geocoderResult.address_components && geocoderResult.address_components.street || null,
+        street_number: geocoderResult.address_components && geocoderResult.address_components.street_number || null,
+        level: geocoderResult.level || null
+      };
+      param.success(data, {
+        geocoderResult: geocoderResult,
+        geocoderSimplify: geocoderSimplify
+      });
+    } else if (feature === 'getCityList') {
+      var provinceResult = data.result[0];
+      var cityResult = data.result[1];
+      var districtResult = data.result[2];
+      param.success(data, {
+        provinceResult: provinceResult,
+        cityResult: cityResult,
+        districtResult: districtResult
+      });
+    } else if (feature === 'getDistrictByCityId') {
+      var districtByCity = data.result[0];
+      param.success(data, districtByCity);
+    } else if (feature === 'calculateDistance') {
+      var calculateDistanceResult = data.result.elements;
+      var distance = [];
+
+      for (var i = 0; i < calculateDistanceResult.length; i++) {
+        distance.push(calculateDistanceResult[i].distance);
+      }
+
+      param.success(data, {
+        calculateDistanceResult: calculateDistanceResult,
+        distance: distance
+      });
+    } else {
+      param.success(data);
+    }
+  },
+  buildWxRequestConfig: function buildWxRequestConfig(param, options, feature) {
+    var that = this;
+    options.header = {
+      "content-type": "application/json"
+    };
+    options.method = 'GET';
+
+    options.success = function (res) {
+      var data = res.data;
+
+      if (data.status === 0) {
+        that.handleData(param, data, feature);
+      } else {
+        param.fail(data);
+      }
+    };
+
+    options.fail = function (res) {
+      res.statusCode = ERROR_CONF.WX_ERR_CODE;
+      param.fail(that.buildErrorConfig(ERROR_CONF.WX_ERR_CODE, res.errMsg));
+    };
+
+    options.complete = function (res) {
+      var statusCode = +res.statusCode;
+
+      switch (statusCode) {
+        case ERROR_CONF.WX_ERR_CODE:
+          {
+            param.complete(that.buildErrorConfig(ERROR_CONF.WX_ERR_CODE, res.errMsg));
+            break;
+          }
+
+        case ERROR_CONF.WX_OK_CODE:
+          {
+            var data = res.data;
+
+            if (data.status === 0) {
+              param.complete(data);
+            } else {
+              param.complete(that.buildErrorConfig(data.status, data.message));
+            }
+
+            break;
+          }
+
+        default:
+          {
+            param.complete(that.buildErrorConfig(ERROR_CONF.SYSTEM_ERR, ERROR_CONF.SYSTEM_ERR_MSG));
+          }
+      }
+    };
+
+    return options;
+  },
+  locationProcess: function locationProcess(param, locationsuccess, locationfail, locationcomplete) {
+    var that = this;
+
+    locationfail = locationfail || function (res) {
+      res.statusCode = ERROR_CONF.WX_ERR_CODE;
+      param.fail(that.buildErrorConfig(ERROR_CONF.WX_ERR_CODE, res.errMsg));
+    };
+
+    locationcomplete = locationcomplete || function (res) {
+      if (res.statusCode == ERROR_CONF.WX_ERR_CODE) {
+        param.complete(that.buildErrorConfig(ERROR_CONF.WX_ERR_CODE, res.errMsg));
+      }
+    };
+
+    if (!param.location) {
+      that.getWXLocation(locationsuccess, locationfail, locationcomplete);
+    } else if (that.checkLocation(param)) {
+      var location = Utils.getLocationParam(param.location);
+      locationsuccess(location);
+    }
+  }
+};
+
+var QQMapWX = /*#__PURE__*/function () {
+  "use strict";
+
+  function QQMapWX(options) {
+    _classCallCheck(this, QQMapWX);
+
+    if (!options.key) {
+      throw Error('key值不能为空');
+    }
+
+    this.key = options.key;
+  }
+
+  _createClass(QQMapWX, [{
+    key: "search",
+    value: function search(options) {
+      var that = this;
+      options = options || {};
+      Utils.polyfillParam(options);
+
+      if (!Utils.checkKeyword(options)) {
+        return;
+      }
+
+      var requestParam = {
+        keyword: options.keyword,
+        orderby: options.orderby || '_distance',
+        page_size: options.page_size || 10,
+        page_index: options.page_index || 1,
+        output: 'json',
+        key: that.key
+      };
+
+      if (options.address_format) {
+        requestParam.address_format = options.address_format;
+      }
+
+      if (options.filter) {
+        requestParam.filter = options.filter;
+      }
+
+      var distance = options.distance || "1000";
+      var auto_extend = options.auto_extend || 1;
+      var region = null;
+      var rectangle = null;
+
+      if (options.region) {
+        region = options.region;
+      }
+
+      if (options.rectangle) {
+        rectangle = options.rectangle;
+      }
+
+      var locationsuccess = function locationsuccess(result) {
+        if (region && !rectangle) {
+          requestParam.boundary = "region(" + region + "," + auto_extend + "," + result.latitude + "," + result.longitude + ")";
+        } else if (rectangle && !region) {
+          requestParam.boundary = "rectangle(" + rectangle + ")";
+        } else {
+          requestParam.boundary = "nearby(" + result.latitude + "," + result.longitude + "," + distance + "," + auto_extend + ")";
+        }
+
+        wx.request(Utils.buildWxRequestConfig(options, {
+          url: URL_SEARCH,
+          data: requestParam
+        }, 'search'));
+      };
+
+      Utils.locationProcess(options, locationsuccess);
+    }
+  }, {
+    key: "getSuggestion",
+    value: function getSuggestion(options) {
+      var that = this;
+      options = options || {};
+      Utils.polyfillParam(options);
+
+      if (!Utils.checkKeyword(options)) {
+        return;
+      }
+
+      var requestParam = {
+        keyword: options.keyword,
+        region: options.region || '全国',
+        region_fix: options.region_fix || 0,
+        policy: options.policy || 0,
+        page_size: options.page_size || 10,
+        page_index: options.page_index || 1,
+        get_subpois: options.get_subpois || 0,
+        output: 'json',
+        key: that.key
+      };
+
+      if (options.address_format) {
+        requestParam.address_format = options.address_format;
+      }
+
+      if (options.filter) {
+        requestParam.filter = options.filter;
+      }
+
+      if (options.location) {
+        var locationsuccess = function locationsuccess(result) {
+          requestParam.location = result.latitude + ',' + result.longitude;
+          wx.request(Utils.buildWxRequestConfig(options, {
+            url: URL_SUGGESTION,
+            data: requestParam
+          }, "suggest"));
+        };
+
+        Utils.locationProcess(options, locationsuccess);
+      } else {
+        wx.request(Utils.buildWxRequestConfig(options, {
+          url: URL_SUGGESTION,
+          data: requestParam
+        }, "suggest"));
+      }
+    }
+  }, {
+    key: "reverseGeocoder",
+    value: function reverseGeocoder(options) {
+      var that = this;
+      options = options || {};
+      Utils.polyfillParam(options);
+      var requestParam = {
+        coord_type: options.coord_type || 5,
+        get_poi: options.get_poi || 0,
+        output: 'json',
+        key: that.key
+      };
+
+      if (options.poi_options) {
+        requestParam.poi_options = options.poi_options;
+      }
+
+      var locationsuccess = function locationsuccess(result) {
+        requestParam.location = result.latitude + ',' + result.longitude;
+        wx.request(Utils.buildWxRequestConfig(options, {
+          url: URL_GET_GEOCODER,
+          data: requestParam
+        }, 'reverseGeocoder'));
+      };
+
+      Utils.locationProcess(options, locationsuccess);
+    }
+  }, {
+    key: "geocoder",
+    value: function geocoder(options) {
+      var that = this;
+      options = options || {};
+      Utils.polyfillParam(options);
+
+      if (Utils.checkParamKeyEmpty(options, 'address')) {
+        return;
+      }
+
+      var requestParam = {
+        address: options.address,
+        output: 'json',
+        key: that.key
+      };
+
+      if (options.region) {
+        requestParam.region = options.region;
+      }
+
+      wx.request(Utils.buildWxRequestConfig(options, {
+        url: URL_GET_GEOCODER,
+        data: requestParam
+      }, 'geocoder'));
+    }
+  }, {
+    key: "getCityList",
+    value: function getCityList(options) {
+      var that = this;
+      options = options || {};
+      Utils.polyfillParam(options);
+      var requestParam = {
+        output: 'json',
+        key: that.key
+      };
+      wx.request(Utils.buildWxRequestConfig(options, {
+        url: URL_CITY_LIST,
+        data: requestParam
+      }, 'getCityList'));
+    }
+  }, {
+    key: "getDistrictByCityId",
+    value: function getDistrictByCityId(options) {
+      var that = this;
+      options = options || {};
+      Utils.polyfillParam(options);
+
+      if (Utils.checkParamKeyEmpty(options, 'id')) {
+        return;
+      }
+
+      var requestParam = {
+        id: options.id || '',
+        output: 'json',
+        key: that.key
+      };
+      wx.request(Utils.buildWxRequestConfig(options, {
+        url: URL_AREA_LIST,
+        data: requestParam
+      }, 'getDistrictByCityId'));
+    }
+  }, {
+    key: "calculateDistance",
+    value: function calculateDistance(options) {
+      var that = this;
+      options = options || {};
+      Utils.polyfillParam(options);
+
+      if (Utils.checkParamKeyEmpty(options, 'to')) {
+        return;
+      }
+
+      var requestParam = {
+        mode: options.mode || 'walking',
+        to: Utils.location2query(options.to),
+        output: 'json',
+        key: that.key
+      };
+
+      if (options.from) {
+        options.location = options.from;
+      }
+
+      if (requestParam.mode == 'straight') {
+        var locationsuccess = function locationsuccess(result) {
+          var locationTo = Utils.getEndLocation(requestParam.to);
+          var data = {
+            message: "query ok",
+            result: {
+              elements: []
+            },
+            status: 0
+          };
+
+          for (var i = 0; i < locationTo.length; i++) {
+            data.result.elements.push({
+              distance: Utils.getDistance(result.latitude, result.longitude, locationTo[i].lat, locationTo[i].lng),
+              duration: 0,
+              from: {
+                lat: result.latitude,
+                lng: result.longitude
+              },
+              to: {
+                lat: locationTo[i].lat,
+                lng: locationTo[i].lng
+              }
+            });
+          }
+
+          var calculateResult = data.result.elements;
+          var distanceResult = [];
+
+          for (var i = 0; i < calculateResult.length; i++) {
+            distanceResult.push(calculateResult[i].distance);
+          }
+
+          return options.success(data, {
+            calculateResult: calculateResult,
+            distanceResult: distanceResult
+          });
+        };
+
+        Utils.locationProcess(options, locationsuccess);
+      } else {
+        var locationsuccess = function locationsuccess(result) {
+          requestParam.from = result.latitude + ',' + result.longitude;
+          wx.request(Utils.buildWxRequestConfig(options, {
+            url: URL_DISTANCE,
+            data: requestParam
+          }, 'calculateDistance'));
+        };
+
+        Utils.locationProcess(options, locationsuccess);
+      }
+    }
+  }]);
+
+  return QQMapWX;
+}();
+
+;
+module.exports = QQMapWX;
+
+/***/ }),
+
+/***/ 29:
+/*!********************************************!*\
+  !*** ./utils/Applets/calculateDistance.js ***!
+  \********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.CalculateDistance = CalculateDistance;
+
+// 计算距离
+// 腾讯地图接口
+var QQMapWX = __webpack_require__(/*! ../qqMap/qqmap-wx-jssdk.min.js */ 28);
+
+var qqmapsdk = new QQMapWX({
+  key: "RIDBZ-YN3KK-SBAJM-ADSAV-2U427-ZJBCM"
+});
+
+function CalculateDistance(destination) {
+  qqmapsdk.calculateDistance({
+    // from参数不指定则表示从当前位置开始计算距离
+    from: '',
+    to: destination,
+    success: function success(res) {
+      console.log("两地之间的距离：", res.result.elements[0].distance, "米");
+    },
+    fail: function fail(err) {
+      console.log(destination);
+      console.log(err);
+    }
+  });
+}
+
+/***/ }),
+
+/***/ 3:
 /*!******************************************************************************************!*\
   !*** ./node_modules/@dcloudio/vue-cli-plugin-uni/packages/mp-vue/dist/mp.runtime.esm.js ***!
   \******************************************************************************************/
@@ -8343,7 +9323,8 @@ internalMixin(Vue);
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../../../webpack/buildin/global.js */ 2)))
 
 /***/ }),
-/* 4 */
+
+/***/ 4:
 /*!*************************************************************!*\
   !*** ./node_modules/@dcloudio/uni-i18n/dist/uni-i18n.es.js ***!
   \*************************************************************/
@@ -8992,7 +9973,8 @@ function resolveLocaleChain(locale) {
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"], __webpack_require__(/*! ./../../../webpack/buildin/global.js */ 2)))
 
 /***/ }),
-/* 5 */
+
+/***/ 5:
 /*!************************!*\
   !*** ./src/pages.json ***!
   \************************/
@@ -9002,993 +9984,17 @@ function resolveLocaleChain(locale) {
 
 
 /***/ }),
-/* 6 */,
-/* 7 */,
-/* 8 */,
-/* 9 */,
-/* 10 */,
-/* 11 */
-/*!**********************************************************************************************************!*\
-  !*** ./node_modules/@dcloudio/vue-cli-plugin-uni/packages/vue-loader/lib/runtime/componentNormalizer.js ***!
-  \**********************************************************************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return normalizeComponent; });
-/* globals __VUE_SSR_CONTEXT__ */
-
-// IMPORTANT: Do NOT use ES2015 features in this file (except for modules).
-// This module is a runtime utility for cleaner component module output and will
-// be included in the final webpack user bundle.
-
-function normalizeComponent (
-  scriptExports,
-  render,
-  staticRenderFns,
-  functionalTemplate,
-  injectStyles,
-  scopeId,
-  moduleIdentifier, /* server only */
-  shadowMode, /* vue-cli only */
-  components, // fixed by xxxxxx auto components
-  renderjs // fixed by xxxxxx renderjs
-) {
-  // Vue.extend constructor export interop
-  var options = typeof scriptExports === 'function'
-    ? scriptExports.options
-    : scriptExports
-
-  // fixed by xxxxxx auto components
-  if (components) {
-    if (!options.components) {
-      options.components = {}
-    }
-    var hasOwn = Object.prototype.hasOwnProperty
-    for (var name in components) {
-      if (hasOwn.call(components, name) && !hasOwn.call(options.components, name)) {
-        options.components[name] = components[name]
-      }
-    }
-  }
-  // fixed by xxxxxx renderjs
-  if (renderjs) {
-    (renderjs.beforeCreate || (renderjs.beforeCreate = [])).unshift(function() {
-      this[renderjs.__module] = this
-    });
-    (options.mixins || (options.mixins = [])).push(renderjs)
-  }
-
-  // render functions
-  if (render) {
-    options.render = render
-    options.staticRenderFns = staticRenderFns
-    options._compiled = true
-  }
-
-  // functional template
-  if (functionalTemplate) {
-    options.functional = true
-  }
-
-  // scopedId
-  if (scopeId) {
-    options._scopeId = 'data-v-' + scopeId
-  }
-
-  var hook
-  if (moduleIdentifier) { // server build
-    hook = function (context) {
-      // 2.3 injection
-      context =
-        context || // cached call
-        (this.$vnode && this.$vnode.ssrContext) || // stateful
-        (this.parent && this.parent.$vnode && this.parent.$vnode.ssrContext) // functional
-      // 2.2 with runInNewContext: true
-      if (!context && typeof __VUE_SSR_CONTEXT__ !== 'undefined') {
-        context = __VUE_SSR_CONTEXT__
-      }
-      // inject component styles
-      if (injectStyles) {
-        injectStyles.call(this, context)
-      }
-      // register component module identifier for async chunk inferrence
-      if (context && context._registeredComponents) {
-        context._registeredComponents.add(moduleIdentifier)
-      }
-    }
-    // used by ssr in case component is cached and beforeCreate
-    // never gets called
-    options._ssrRegister = hook
-  } else if (injectStyles) {
-    hook = shadowMode
-      ? function () { injectStyles.call(this, this.$root.$options.shadowRoot) }
-      : injectStyles
-  }
-
-  if (hook) {
-    if (options.functional) {
-      // for template-only hot-reload because in that case the render fn doesn't
-      // go through the normalizer
-      options._injectStyles = hook
-      // register for functioal component in vue file
-      var originalRender = options.render
-      options.render = function renderWithStyleInjection (h, context) {
-        hook.call(context)
-        return originalRender(h, context)
-      }
-    } else {
-      // inject component registration as beforeCreate hook
-      var existing = options.beforeCreate
-      options.beforeCreate = existing
-        ? [].concat(existing, hook)
-        : [hook]
-    }
-  }
-
-  return {
-    exports: scriptExports,
-    options: options
-  }
-}
-
-
-/***/ }),
-/* 12 */,
-/* 13 */,
-/* 14 */,
-/* 15 */,
-/* 16 */,
-/* 17 */,
-/* 18 */
-/*!******************************!*\
-  !*** ./src/api/userLogin.js ***!
-  \******************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(uni) {
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.userLogin = userLogin;
-
-var _vue = _interopRequireDefault(__webpack_require__(/*! vue */ 3));
-
-var _reverseGeocoder = __webpack_require__(/*! ../../utils/Applets/reverseGeocoder */ 19);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-// 注意api中函数和云函数的区别：
-// 经过云函数和直接操作数据库差别在于前者权限多，并且更加安全
-function userLogin() {
-  return new Promise(function (resolve, reject) {
-    uni.showModal({
-      title: "温馨提示",
-      content: "请登录",
-      success: function success(res) {
-        if (res.confirm) {
-          uni.getUserProfile({
-            desc: "注册用户信息使用",
-            lang: "zh_CN",
-            success: function success(res) {
-              // 除了获取用户信息外，还需要获取用户所处位置
-              (0, _reverseGeocoder.GetLocation)().then(function (locat) {
-                // 挂载到全局对象上
-                _vue.default.prototype.userInformation = {
-                  nickName: res.userInfo.nickName,
-                  gender: res.userInfo.gender,
-                  avatarUrl: res.userInfo.avatarUrl,
-                  location: {
-                    latitude: locat.latitude,
-                    longitude: locat.longitude
-                  },
-                  star: [],
-                  credit: 100,
-                  openid: ""
-                };
-                wx.cloud.callFunction({
-                  name: "userLogin",
-                  data: {
-                    nickName: res.userInfo.nickName,
-                    gender: res.userInfo.gender,
-                    avatarUrl: res.userInfo.avatarUrl,
-                    location: {
-                      latitude: locat.latitude,
-                      longitude: locat.longitude
-                    }
-                  }
-                }).then(function (res) {
-                  resolve(res);
-                }).catch(function (err) {
-                  reject(err);
-                });
-              });
-            }
-          });
-        }
-      }
-    });
-  });
-}
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
-
-/***/ }),
-/* 19 */
-/*!******************************************!*\
-  !*** ./utils/Applets/reverseGeocoder.js ***!
-  \******************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(uni) {
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.GetLocation = GetLocation;
-exports.ReverseGeocoder = ReverseGeocoder;
-
-// 负责获取位置坐标（gps二元组）以及封装gps坐标转换成真实坐标
-// 腾讯地图接口
-var QQMapWX = __webpack_require__(/*! ../qqMap/qqmap-wx-jssdk.min.js */ 20);
-
-var qqmapsdk = new QQMapWX({
-  key: "RIDBZ-YN3KK-SBAJM-ADSAV-2U427-ZJBCM"
-}); // 获取gps信息（弹窗申请等等）
-
-function GetLocation() {
-  return new Promise(function (resolve, reject) {
-    uni.getSetting({
-      success: function success(res) {
-        if (res.authSetting['scope.userLocation']) {
-          uni.authorize({
-            scope: "scope.userLocation",
-            success: function success() {
-              uni.getLocation({
-                type: 'wgs84',
-                success: function success(res) {
-                  resolve(res);
-                }
-              });
-            },
-            fail: function fail(err) {
-              reject(err);
-            }
-          });
-        } else {
-          // 需要提示他一些功能无法使用
-          console.log("未授权");
-        }
-      }
-    });
-  });
-}
-
-function ReverseGeocoder(_ref) {
-  var latitude = _ref.latitude,
-      longitude = _ref.longitude;
-  qqmapsdk.reverseGeocoder({
-    location: {
-      latitude: latitude,
-      longitude: longitude
-    },
-    success: function success(result) {
-      console.log(result);
-    },
-    fail: function fail(err) {
-      console.log(err);
-    },
-    complete: function complete(data) {
-      console.log(data);
-    }
-  });
-}
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
-
-/***/ }),
-/* 20 */
-/*!*******************************************!*\
-  !*** ./utils/qqMap/qqmap-wx-jssdk.min.js ***!
-  \*******************************************/
+/***/ 58:
+/*!*****************************!*\
+  !*** ./src/static/logo.png ***!
+  \*****************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
-
-var ERROR_CONF = {
-  KEY_ERR: 311,
-  KEY_ERR_MSG: 'key格式错误',
-  PARAM_ERR: 310,
-  PARAM_ERR_MSG: '请求参数信息有误',
-  SYSTEM_ERR: 600,
-  SYSTEM_ERR_MSG: '系统错误',
-  WX_ERR_CODE: 1000,
-  WX_OK_CODE: 200
-};
-var BASE_URL = 'https://apis.map.qq.com/ws/';
-var URL_SEARCH = BASE_URL + 'place/v1/search';
-var URL_SUGGESTION = BASE_URL + 'place/v1/suggestion';
-var URL_GET_GEOCODER = BASE_URL + 'geocoder/v1/';
-var URL_CITY_LIST = BASE_URL + 'district/v1/list';
-var URL_AREA_LIST = BASE_URL + 'district/v1/getchildren';
-var URL_DISTANCE = BASE_URL + 'distance/v1/';
-var EARTH_RADIUS = 6378136.49;
-var Utils = {
-  location2query: function location2query(data) {
-    if (typeof data == 'string') {
-      return data;
-    }
-
-    var query = '';
-
-    for (var i = 0; i < data.length; i++) {
-      var d = data[i];
-
-      if (!!query) {
-        query += ';';
-      }
-
-      if (d.location) {
-        query = query + d.location.lat + ',' + d.location.lng;
-      }
-
-      if (d.latitude && d.longitude) {
-        query = query + d.latitude + ',' + d.longitude;
-      }
-    }
-
-    return query;
-  },
-  rad: function rad(d) {
-    return d * Math.PI / 180.0;
-  },
-  getEndLocation: function getEndLocation(location) {
-    var to = location.split(';');
-    var endLocation = [];
-
-    for (var i = 0; i < to.length; i++) {
-      endLocation.push({
-        lat: parseFloat(to[i].split(',')[0]),
-        lng: parseFloat(to[i].split(',')[1])
-      });
-    }
-
-    return endLocation;
-  },
-  getDistance: function getDistance(latFrom, lngFrom, latTo, lngTo) {
-    var radLatFrom = this.rad(latFrom);
-    var radLatTo = this.rad(latTo);
-    var a = radLatFrom - radLatTo;
-    var b = this.rad(lngFrom) - this.rad(lngTo);
-    var distance = 2 * Math.asin(Math.sqrt(Math.pow(Math.sin(a / 2), 2) + Math.cos(radLatFrom) * Math.cos(radLatTo) * Math.pow(Math.sin(b / 2), 2)));
-    distance = distance * EARTH_RADIUS;
-    distance = Math.round(distance * 10000) / 10000;
-    return parseFloat(distance.toFixed(0));
-  },
-  getWXLocation: function getWXLocation(success, fail, complete) {
-    wx.getLocation({
-      type: 'gcj02',
-      success: success,
-      fail: fail,
-      complete: complete
-    });
-  },
-  getLocationParam: function getLocationParam(location) {
-    if (typeof location == 'string') {
-      var locationArr = location.split(',');
-
-      if (locationArr.length === 2) {
-        location = {
-          latitude: location.split(',')[0],
-          longitude: location.split(',')[1]
-        };
-      } else {
-        location = {};
-      }
-    }
-
-    return location;
-  },
-  polyfillParam: function polyfillParam(param) {
-    param.success = param.success || function () {};
-
-    param.fail = param.fail || function () {};
-
-    param.complete = param.complete || function () {};
-  },
-  checkParamKeyEmpty: function checkParamKeyEmpty(param, key) {
-    if (!param[key]) {
-      var errconf = this.buildErrorConfig(ERROR_CONF.PARAM_ERR, ERROR_CONF.PARAM_ERR_MSG + key + '参数格式有误');
-      param.fail(errconf);
-      param.complete(errconf);
-      return true;
-    }
-
-    return false;
-  },
-  checkKeyword: function checkKeyword(param) {
-    return !this.checkParamKeyEmpty(param, 'keyword');
-  },
-  checkLocation: function checkLocation(param) {
-    var location = this.getLocationParam(param.location);
-
-    if (!location || !location.latitude || !location.longitude) {
-      var errconf = this.buildErrorConfig(ERROR_CONF.PARAM_ERR, ERROR_CONF.PARAM_ERR_MSG + ' location参数格式有误');
-      param.fail(errconf);
-      param.complete(errconf);
-      return false;
-    }
-
-    return true;
-  },
-  buildErrorConfig: function buildErrorConfig(errCode, errMsg) {
-    return {
-      status: errCode,
-      message: errMsg
-    };
-  },
-  handleData: function handleData(param, data, feature) {
-    if (feature === 'search') {
-      var searchResult = data.data;
-      var searchSimplify = [];
-
-      for (var i = 0; i < searchResult.length; i++) {
-        searchSimplify.push({
-          id: searchResult[i].id || null,
-          title: searchResult[i].title || null,
-          latitude: searchResult[i].location && searchResult[i].location.lat || null,
-          longitude: searchResult[i].location && searchResult[i].location.lng || null,
-          address: searchResult[i].address || null,
-          category: searchResult[i].category || null,
-          tel: searchResult[i].tel || null,
-          adcode: searchResult[i].ad_info && searchResult[i].ad_info.adcode || null,
-          city: searchResult[i].ad_info && searchResult[i].ad_info.city || null,
-          district: searchResult[i].ad_info && searchResult[i].ad_info.district || null,
-          province: searchResult[i].ad_info && searchResult[i].ad_info.province || null
-        });
-      }
-
-      param.success(data, {
-        searchResult: searchResult,
-        searchSimplify: searchSimplify
-      });
-    } else if (feature === 'suggest') {
-      var suggestResult = data.data;
-      var suggestSimplify = [];
-
-      for (var i = 0; i < suggestResult.length; i++) {
-        suggestSimplify.push({
-          adcode: suggestResult[i].adcode || null,
-          address: suggestResult[i].address || null,
-          category: suggestResult[i].category || null,
-          city: suggestResult[i].city || null,
-          district: suggestResult[i].district || null,
-          id: suggestResult[i].id || null,
-          latitude: suggestResult[i].location && suggestResult[i].location.lat || null,
-          longitude: suggestResult[i].location && suggestResult[i].location.lng || null,
-          province: suggestResult[i].province || null,
-          title: suggestResult[i].title || null,
-          type: suggestResult[i].type || null
-        });
-      }
-
-      param.success(data, {
-        suggestResult: suggestResult,
-        suggestSimplify: suggestSimplify
-      });
-    } else if (feature === 'reverseGeocoder') {
-      var reverseGeocoderResult = data.result;
-      var reverseGeocoderSimplify = {
-        address: reverseGeocoderResult.address || null,
-        latitude: reverseGeocoderResult.location && reverseGeocoderResult.location.lat || null,
-        longitude: reverseGeocoderResult.location && reverseGeocoderResult.location.lng || null,
-        adcode: reverseGeocoderResult.ad_info && reverseGeocoderResult.ad_info.adcode || null,
-        city: reverseGeocoderResult.address_component && reverseGeocoderResult.address_component.city || null,
-        district: reverseGeocoderResult.address_component && reverseGeocoderResult.address_component.district || null,
-        nation: reverseGeocoderResult.address_component && reverseGeocoderResult.address_component.nation || null,
-        province: reverseGeocoderResult.address_component && reverseGeocoderResult.address_component.province || null,
-        street: reverseGeocoderResult.address_component && reverseGeocoderResult.address_component.street || null,
-        street_number: reverseGeocoderResult.address_component && reverseGeocoderResult.address_component.street_number || null,
-        recommend: reverseGeocoderResult.formatted_addresses && reverseGeocoderResult.formatted_addresses.recommend || null,
-        rough: reverseGeocoderResult.formatted_addresses && reverseGeocoderResult.formatted_addresses.rough || null
-      };
-
-      if (reverseGeocoderResult.pois) {
-        var pois = reverseGeocoderResult.pois;
-        var poisSimplify = [];
-
-        for (var i = 0; i < pois.length; i++) {
-          poisSimplify.push({
-            id: pois[i].id || null,
-            title: pois[i].title || null,
-            latitude: pois[i].location && pois[i].location.lat || null,
-            longitude: pois[i].location && pois[i].location.lng || null,
-            address: pois[i].address || null,
-            category: pois[i].category || null,
-            adcode: pois[i].ad_info && pois[i].ad_info.adcode || null,
-            city: pois[i].ad_info && pois[i].ad_info.city || null,
-            district: pois[i].ad_info && pois[i].ad_info.district || null,
-            province: pois[i].ad_info && pois[i].ad_info.province || null
-          });
-        }
-
-        param.success(data, {
-          reverseGeocoderResult: reverseGeocoderResult,
-          reverseGeocoderSimplify: reverseGeocoderSimplify,
-          pois: pois,
-          poisSimplify: poisSimplify
-        });
-      } else {
-        param.success(data, {
-          reverseGeocoderResult: reverseGeocoderResult,
-          reverseGeocoderSimplify: reverseGeocoderSimplify
-        });
-      }
-    } else if (feature === 'geocoder') {
-      var geocoderResult = data.result;
-      var geocoderSimplify = {
-        title: geocoderResult.title || null,
-        latitude: geocoderResult.location && geocoderResult.location.lat || null,
-        longitude: geocoderResult.location && geocoderResult.location.lng || null,
-        adcode: geocoderResult.ad_info && geocoderResult.ad_info.adcode || null,
-        province: geocoderResult.address_components && geocoderResult.address_components.province || null,
-        city: geocoderResult.address_components && geocoderResult.address_components.city || null,
-        district: geocoderResult.address_components && geocoderResult.address_components.district || null,
-        street: geocoderResult.address_components && geocoderResult.address_components.street || null,
-        street_number: geocoderResult.address_components && geocoderResult.address_components.street_number || null,
-        level: geocoderResult.level || null
-      };
-      param.success(data, {
-        geocoderResult: geocoderResult,
-        geocoderSimplify: geocoderSimplify
-      });
-    } else if (feature === 'getCityList') {
-      var provinceResult = data.result[0];
-      var cityResult = data.result[1];
-      var districtResult = data.result[2];
-      param.success(data, {
-        provinceResult: provinceResult,
-        cityResult: cityResult,
-        districtResult: districtResult
-      });
-    } else if (feature === 'getDistrictByCityId') {
-      var districtByCity = data.result[0];
-      param.success(data, districtByCity);
-    } else if (feature === 'calculateDistance') {
-      var calculateDistanceResult = data.result.elements;
-      var distance = [];
-
-      for (var i = 0; i < calculateDistanceResult.length; i++) {
-        distance.push(calculateDistanceResult[i].distance);
-      }
-
-      param.success(data, {
-        calculateDistanceResult: calculateDistanceResult,
-        distance: distance
-      });
-    } else {
-      param.success(data);
-    }
-  },
-  buildWxRequestConfig: function buildWxRequestConfig(param, options, feature) {
-    var that = this;
-    options.header = {
-      "content-type": "application/json"
-    };
-    options.method = 'GET';
-
-    options.success = function (res) {
-      var data = res.data;
-
-      if (data.status === 0) {
-        that.handleData(param, data, feature);
-      } else {
-        param.fail(data);
-      }
-    };
-
-    options.fail = function (res) {
-      res.statusCode = ERROR_CONF.WX_ERR_CODE;
-      param.fail(that.buildErrorConfig(ERROR_CONF.WX_ERR_CODE, res.errMsg));
-    };
-
-    options.complete = function (res) {
-      var statusCode = +res.statusCode;
-
-      switch (statusCode) {
-        case ERROR_CONF.WX_ERR_CODE:
-          {
-            param.complete(that.buildErrorConfig(ERROR_CONF.WX_ERR_CODE, res.errMsg));
-            break;
-          }
-
-        case ERROR_CONF.WX_OK_CODE:
-          {
-            var data = res.data;
-
-            if (data.status === 0) {
-              param.complete(data);
-            } else {
-              param.complete(that.buildErrorConfig(data.status, data.message));
-            }
-
-            break;
-          }
-
-        default:
-          {
-            param.complete(that.buildErrorConfig(ERROR_CONF.SYSTEM_ERR, ERROR_CONF.SYSTEM_ERR_MSG));
-          }
-      }
-    };
-
-    return options;
-  },
-  locationProcess: function locationProcess(param, locationsuccess, locationfail, locationcomplete) {
-    var that = this;
-
-    locationfail = locationfail || function (res) {
-      res.statusCode = ERROR_CONF.WX_ERR_CODE;
-      param.fail(that.buildErrorConfig(ERROR_CONF.WX_ERR_CODE, res.errMsg));
-    };
-
-    locationcomplete = locationcomplete || function (res) {
-      if (res.statusCode == ERROR_CONF.WX_ERR_CODE) {
-        param.complete(that.buildErrorConfig(ERROR_CONF.WX_ERR_CODE, res.errMsg));
-      }
-    };
-
-    if (!param.location) {
-      that.getWXLocation(locationsuccess, locationfail, locationcomplete);
-    } else if (that.checkLocation(param)) {
-      var location = Utils.getLocationParam(param.location);
-      locationsuccess(location);
-    }
-  }
-};
-
-var QQMapWX = /*#__PURE__*/function () {
-  "use strict";
-
-  function QQMapWX(options) {
-    _classCallCheck(this, QQMapWX);
-
-    if (!options.key) {
-      throw Error('key值不能为空');
-    }
-
-    this.key = options.key;
-  }
-
-  _createClass(QQMapWX, [{
-    key: "search",
-    value: function search(options) {
-      var that = this;
-      options = options || {};
-      Utils.polyfillParam(options);
-
-      if (!Utils.checkKeyword(options)) {
-        return;
-      }
-
-      var requestParam = {
-        keyword: options.keyword,
-        orderby: options.orderby || '_distance',
-        page_size: options.page_size || 10,
-        page_index: options.page_index || 1,
-        output: 'json',
-        key: that.key
-      };
-
-      if (options.address_format) {
-        requestParam.address_format = options.address_format;
-      }
-
-      if (options.filter) {
-        requestParam.filter = options.filter;
-      }
-
-      var distance = options.distance || "1000";
-      var auto_extend = options.auto_extend || 1;
-      var region = null;
-      var rectangle = null;
-
-      if (options.region) {
-        region = options.region;
-      }
-
-      if (options.rectangle) {
-        rectangle = options.rectangle;
-      }
-
-      var locationsuccess = function locationsuccess(result) {
-        if (region && !rectangle) {
-          requestParam.boundary = "region(" + region + "," + auto_extend + "," + result.latitude + "," + result.longitude + ")";
-        } else if (rectangle && !region) {
-          requestParam.boundary = "rectangle(" + rectangle + ")";
-        } else {
-          requestParam.boundary = "nearby(" + result.latitude + "," + result.longitude + "," + distance + "," + auto_extend + ")";
-        }
-
-        wx.request(Utils.buildWxRequestConfig(options, {
-          url: URL_SEARCH,
-          data: requestParam
-        }, 'search'));
-      };
-
-      Utils.locationProcess(options, locationsuccess);
-    }
-  }, {
-    key: "getSuggestion",
-    value: function getSuggestion(options) {
-      var that = this;
-      options = options || {};
-      Utils.polyfillParam(options);
-
-      if (!Utils.checkKeyword(options)) {
-        return;
-      }
-
-      var requestParam = {
-        keyword: options.keyword,
-        region: options.region || '全国',
-        region_fix: options.region_fix || 0,
-        policy: options.policy || 0,
-        page_size: options.page_size || 10,
-        page_index: options.page_index || 1,
-        get_subpois: options.get_subpois || 0,
-        output: 'json',
-        key: that.key
-      };
-
-      if (options.address_format) {
-        requestParam.address_format = options.address_format;
-      }
-
-      if (options.filter) {
-        requestParam.filter = options.filter;
-      }
-
-      if (options.location) {
-        var locationsuccess = function locationsuccess(result) {
-          requestParam.location = result.latitude + ',' + result.longitude;
-          wx.request(Utils.buildWxRequestConfig(options, {
-            url: URL_SUGGESTION,
-            data: requestParam
-          }, "suggest"));
-        };
-
-        Utils.locationProcess(options, locationsuccess);
-      } else {
-        wx.request(Utils.buildWxRequestConfig(options, {
-          url: URL_SUGGESTION,
-          data: requestParam
-        }, "suggest"));
-      }
-    }
-  }, {
-    key: "reverseGeocoder",
-    value: function reverseGeocoder(options) {
-      var that = this;
-      options = options || {};
-      Utils.polyfillParam(options);
-      var requestParam = {
-        coord_type: options.coord_type || 5,
-        get_poi: options.get_poi || 0,
-        output: 'json',
-        key: that.key
-      };
-
-      if (options.poi_options) {
-        requestParam.poi_options = options.poi_options;
-      }
-
-      var locationsuccess = function locationsuccess(result) {
-        requestParam.location = result.latitude + ',' + result.longitude;
-        wx.request(Utils.buildWxRequestConfig(options, {
-          url: URL_GET_GEOCODER,
-          data: requestParam
-        }, 'reverseGeocoder'));
-      };
-
-      Utils.locationProcess(options, locationsuccess);
-    }
-  }, {
-    key: "geocoder",
-    value: function geocoder(options) {
-      var that = this;
-      options = options || {};
-      Utils.polyfillParam(options);
-
-      if (Utils.checkParamKeyEmpty(options, 'address')) {
-        return;
-      }
-
-      var requestParam = {
-        address: options.address,
-        output: 'json',
-        key: that.key
-      };
-
-      if (options.region) {
-        requestParam.region = options.region;
-      }
-
-      wx.request(Utils.buildWxRequestConfig(options, {
-        url: URL_GET_GEOCODER,
-        data: requestParam
-      }, 'geocoder'));
-    }
-  }, {
-    key: "getCityList",
-    value: function getCityList(options) {
-      var that = this;
-      options = options || {};
-      Utils.polyfillParam(options);
-      var requestParam = {
-        output: 'json',
-        key: that.key
-      };
-      wx.request(Utils.buildWxRequestConfig(options, {
-        url: URL_CITY_LIST,
-        data: requestParam
-      }, 'getCityList'));
-    }
-  }, {
-    key: "getDistrictByCityId",
-    value: function getDistrictByCityId(options) {
-      var that = this;
-      options = options || {};
-      Utils.polyfillParam(options);
-
-      if (Utils.checkParamKeyEmpty(options, 'id')) {
-        return;
-      }
-
-      var requestParam = {
-        id: options.id || '',
-        output: 'json',
-        key: that.key
-      };
-      wx.request(Utils.buildWxRequestConfig(options, {
-        url: URL_AREA_LIST,
-        data: requestParam
-      }, 'getDistrictByCityId'));
-    }
-  }, {
-    key: "calculateDistance",
-    value: function calculateDistance(options) {
-      var that = this;
-      options = options || {};
-      Utils.polyfillParam(options);
-
-      if (Utils.checkParamKeyEmpty(options, 'to')) {
-        return;
-      }
-
-      var requestParam = {
-        mode: options.mode || 'walking',
-        to: Utils.location2query(options.to),
-        output: 'json',
-        key: that.key
-      };
-
-      if (options.from) {
-        options.location = options.from;
-      }
-
-      if (requestParam.mode == 'straight') {
-        var locationsuccess = function locationsuccess(result) {
-          var locationTo = Utils.getEndLocation(requestParam.to);
-          var data = {
-            message: "query ok",
-            result: {
-              elements: []
-            },
-            status: 0
-          };
-
-          for (var i = 0; i < locationTo.length; i++) {
-            data.result.elements.push({
-              distance: Utils.getDistance(result.latitude, result.longitude, locationTo[i].lat, locationTo[i].lng),
-              duration: 0,
-              from: {
-                lat: result.latitude,
-                lng: result.longitude
-              },
-              to: {
-                lat: locationTo[i].lat,
-                lng: locationTo[i].lng
-              }
-            });
-          }
-
-          var calculateResult = data.result.elements;
-          var distanceResult = [];
-
-          for (var i = 0; i < calculateResult.length; i++) {
-            distanceResult.push(calculateResult[i].distance);
-          }
-
-          return options.success(data, {
-            calculateResult: calculateResult,
-            distanceResult: distanceResult
-          });
-        };
-
-        Utils.locationProcess(options, locationsuccess);
-      } else {
-        var locationsuccess = function locationsuccess(result) {
-          requestParam.from = result.latitude + ',' + result.longitude;
-          wx.request(Utils.buildWxRequestConfig(options, {
-            url: URL_DISTANCE,
-            data: requestParam
-          }, 'calculateDistance'));
-        };
-
-        Utils.locationProcess(options, locationsuccess);
-      }
-    }
-  }]);
-
-  return QQMapWX;
-}();
-
-;
-module.exports = QQMapWX;
-
-/***/ }),
-/* 21 */,
-/* 22 */,
-/* 23 */,
-/* 24 */,
-/* 25 */
-/*!********************************************!*\
-  !*** ./utils/Applets/calculateDistance.js ***!
-  \********************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.CalculateDistance = CalculateDistance;
-
-// 计算距离
-// 腾讯地图接口
-var QQMapWX = __webpack_require__(/*! ../qqMap/qqmap-wx-jssdk.min.js */ 20);
-
-var qqmapsdk = new QQMapWX({
-  key: "RIDBZ-YN3KK-SBAJM-ADSAV-2U427-ZJBCM"
-});
-
-function CalculateDistance(destination) {
-  qqmapsdk.calculateDistance({
-    // from参数不指定则表示从当前位置开始计算距离
-    from: '',
-    to: destination,
-    success: function success(res) {
-      console.log("两地之间的距离：", res.result.elements[0].distance, "米");
-    },
-    fail: function fail(err) {
-      console.log(destination);
-      console.log(err);
-    }
-  });
-}
+module.exports = "data:image/png;base64,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UmVhZHlxyWU8AAADKmlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4gPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNS42LWMxMzIgNzkuMTU5Mjg0LCAyMDE2LzA0LzE5LTEzOjEzOjQwICAgICAgICAiPiA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPiA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtbG5zOnhtcD0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLyIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDpGRkE0MjcxNTdEQzYxMUU4QkZBOERDOEVCQ0U0NTBGMSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDpGRkE0MjcxNDdEQzYxMUU4QkZBOERDOEVCQ0U0NTBGMSIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ0MgMjAxNS41IChNYWNpbnRvc2gpIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6QkE4RkFCN0M3REM1MTFFOEJGQThEQzhFQkNFNDUwRjEiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6QkE4RkFCN0Q3REM1MTFFOEJGQThEQzhFQkNFNDUwRjEiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz5BZZ+3AAAB1ElEQVR42mJkAALtmZb/GfAAJkIKwIoYiAA4FV1JO0Ylk0hWxILLHTgV6cyywqoIIIAYiQinb8S4iYs036E7esgEJq6ABAGAACImMBmo5m6yDcLlR5gcNnnaumhADWIhJoOTbRC+9ILPa9+o4TWAAAIlyDVAOphCc1SYqGAICNwZxumIidi8NILz2qhBdCyPaOcicgq1wRnYAAFErRKSgZo+GzSOoWpQD1sHsRCjCDnzkpp90DM+If2jUTbqoFEHjZZDpJYroyFESeNmNFHTykEqg8g9bwACCNRiVAYyLgEx1wA7Zu3V9OMhVBt1opajBlsaCh7NZaMOGnXQgFeupHZjKO1CjUbZqINGHTTqoFEHjTpo1EGjDhqMgw342kejUTaahggpoOdg1WiUjTpoODoIvL7tzSBykB5AgPbtGIdBGIYCaBR16swROEQvzT06cxjm1lRFDC0LcpXC+xJzpIdJhOW8e4z359MVWSde1C32xRYasC0mCmascDZzrQz+7NgABAgQINnRY/iUrb5D9v9l9toqCBAgQIAAAQIESAABAgQIEKCD5ZK9QPaMigoCdIJP7NdjOyoIECBAgGQBGjB8zVDjam153T0OqInJbBAWfdg8AExKZVcA71uIAAAAAElFTkSuQmCC"
 
 /***/ })
-]]);
+
+}]);
 //# sourceMappingURL=../../.sourcemap/mp-weixin/common/vendor.js.map
