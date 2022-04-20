@@ -6,7 +6,7 @@
         <div class="contest">
             <div class="header">我的比赛</div>
             <div class="list" v-if="isLogin">
-                <Contest class="item" v-for='item in list' :key="item"/>
+                <Contest class="item" v-for='item in list' :key="item" :item="item"/>
             </div>
             <div v-else class="noLogin">
                 <div class="title">尚未登录！！</div>
@@ -20,13 +20,14 @@
 import Vue from "vue"
 import Contest from "./Contest.vue"
 import {userLogin} from "@/api/userLogin"
+import {getUserContest} from "@/api/getUserContest"
 export default {
     name:"contest-index",
     components: { Contest },
     data(){
         return {
             isLogin:false, //是否登录
-            list:[1,2,3]
+            list:[]
         }
     },
     methods:{
@@ -52,6 +53,11 @@ export default {
             this.isLogin =false
         }else{
             this.isLogin =true
+            // 登录成功了才获取活动列表
+            getUserContest().then(res=>{
+                console.log(res);
+                this.list =res.result.data
+            })
         }
     }
 }

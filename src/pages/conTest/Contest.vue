@@ -1,13 +1,13 @@
 <template>
   <div class="contest-view">
       <div class="img">
-        <image src="../../static/logo.png" />
+        <image :src="item.img" />
       </div>
       <div class="detail">
-        <div class="title">沙河一号篮球场</div>
+        <div class="title">{{item.name}}</div>
         <div class="tips">
-          <div class="type">篮球</div>
-          <div class="limit">限10人</div>
+          <div class="type">{{item.type.sport}}</div>
+          <div class="limit">限{{item.type.limit}}人</div>
         </div>
         <div class="time">
           预约时间：14：00~16：00
@@ -22,10 +22,11 @@
 <script>
 export default {
     name:"contest",
+    props:['item'],
     methods:{
       navigateToDetail(){
         uni.navigateTo({
-           url: "/pages/conTest/Detail",
+           url: '/pages/conTest/Detail?item='+JSON.stringify(this.item),
            success:()=>{
              console.log("已调用");
           },

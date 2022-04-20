@@ -6,15 +6,15 @@
         <div class="detail">
              <div class="header">基本信息</div>
              <div class="content">
-                 <van-cell title="球场名称" icon="location-o" value="沙河一号场" />
+                 <van-cell title="球场名称" icon="location-o" :value="item.name" />
                  <van-cell title="联系方式" icon="location-o" value="18790342103" />
                  <van-cell title="预约时间" icon="location-o" value="10：00~22：00" />
-                 <van-cell title="人均消费" icon="location-o" value="￥0元" />
-                 <van-cell title="球场评分" icon="location-o" value="5.0" />
+                 <van-cell title="人均消费" icon="location-o" :value="'￥'+item.price+'元'" />
+                 <van-cell title="球场评分" icon="location-o" :value="scoreObj.score/scoreObj.people" />
              </div>
              <div class="persons">
                  <div class="header">参与人员</div>
-                 <div class="person">
+                 <div class="person" v-for="person in item.person" :key="person">
                      <img src="../../static/logo.png" alt="">
                      <div class="name">xxxxx</div>
                  </div>
@@ -23,7 +23,6 @@
         <div class="footer">
             <van-button icon="star" type="primary" class="collect" @click="collect"></van-button>
             <van-button icon="plus" type="primary" class="join"></van-button>
-            <!-- <Icon name="chat-o" /> -->
         </div>
   </div>
 </template>
@@ -31,6 +30,11 @@
 <script>
 export default {
     name:"detail",
+    data(){
+        return{
+            item:{}
+        }
+    },
     methods:{
         collect(){
             wx.cloud.callFunction({
@@ -44,6 +48,10 @@ export default {
                 console.log(err);
             })
         }
+    },
+    onLoad:function(option){
+        const item =JSON.parse(option.item)
+        this.item =item
     }
 
 }
