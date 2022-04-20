@@ -1,67 +1,106 @@
 <template>
-	<view class="content">
-		<image class="logo" src="/static/logo.png"></image>
-		<view>
-			<text class="title">{{title}}</text>
-			<button @click="test">点击打卡</button>
-			<button @click="login">点击登录</button>
-		</view>
-	</view>
+  <view class="container">
+    <!-- 轮播图 -->
+    <swiper
+      class="swiper"
+      :indicator-dots="true"
+      :autoplay="true"
+      :interval="5000"
+      :duration="600"
+      indicator-active-color="#1989fa"
+    >
+      <swiper-item class="swiper-item">
+        <image src="../../static/img/1.png"></image>
+      </swiper-item>
+      <swiper-item class="swiper-item">
+        <image src="../../static/img/2.png"></image>
+      </swiper-item>
+      <swiper-item class="swiper-item">
+        <image src="../../static/img/3.png"></image>
+      </swiper-item>
+      <swiper-item class="swiper-item">
+        <image src="../../static/img/4.png"></image>
+      </swiper-item>
+    </swiper>
+    <view class="title">球场列表</view>
+    <Playground
+      v-for="item in playground"
+      :key="item._id"
+      :playground="item"
+      @goDetail="goDetail"
+    />
+  </view>
 </template>
 
 <script>
-import Vue from "vue"
-import {userLogin} from "@/api/userLogin.js"
-import {GetLocation} from "../../../utils/Applets/reverseGeocoder"
-import {CalculateDistance} from "../../../utils/Applets/calculateDistance"
-	export default {
-		data() {
-			return {
-				title: '暂未登录',
-			}
-		},
-		onLoad() {
-
-		},
-		methods: {
-			test(){
-				wx.cloud.callFunction({
-					name:"credit"
-				}).then(res=>{
-					console.log("正在计算距离......");
-					CalculateDistance([res.result.location])
-				})
-			},
-			login(){
-				userLogin().then(res=>{
-					console.log(res)
-				})
-			},
-		}
-	}
+import Playground from "../../components/playground/Playground";
+export default {
+  data() {
+    return {
+      playground: [],
+    };
+  },
+  onLoad() {
+    this.getPlayground();
+  },
+  methods: {
+    getPlayground() {
+      wx.cloud.callFunction({
+        name: "getPlayground",
+        success: (res) => {
+          this.playground = res.result.data;
+        },
+        fail: (err) => {
+          uni.showToast({
+            title: "请求失败",
+            icon: "error",
+            duration: 2000,
+          });
+        },
+      });
+    },
+    goDetail(id) {
+      uni.navigateTo({
+        url: `/pages/playgroundDetail/playgroundDetail?id=${id}`,
+        // url:"/pages/playgroundDetail",
+        success:()=>{
+        console.log("success!!");
+      },fail:(err)=>{
+        console.log(err);
+      }
+      });
+      console.log("点击成功");
+    },
+  },
+  components: {
+    Playground,
+  },
+};
 </script>
 
 <style>
-	.content {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		justify-content: center;
-	}
-
-	.logo {
-		height: 200rpx;
-		width: 200rpx;
-		margin: 200rpx auto 50rpx auto;
-	}
-
-	.text-area {
-		display: flex;
-		justify-content: center;
-	}
-
-	.title {
-		font-size: 36rpx;
-		color: #8f8f94;
-	}
+.swiper {
+  height: 150px;
+}
+.swiper-item image {
+  width: 100%;
+  height: 100%;
+}
+.title {
+  width: 100%;
+  height: 60rpx;
+  margin: 40rpx 0;
+  text-align: center;
+  line-height: 60rpx;
+  font-size: 40rpx;
+  font-weight: 700;
+}
+.title::after {
+  content: "";
+  width: 120rpx;
+  height: 4rpx;
+  display: block;
+  margin: 0 auto;
+  border-bottom: 8rpx solid #1989fa;
+}
 </style>

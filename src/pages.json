@@ -1,63 +1,104 @@
 {
-	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
-		{
-			"path":"pages/conTest/Detail",
-			"style":{
-				"navigationBarTitleText":"比赛详情",
-				"usingComponents":{
-					"van-cell":"/wxcomponents/@vant/dist/cell/index",
-					"van-button":"/wxcomponents/@vant/dist/button/index"
-				}
-			}
-		},
-		{
-			"path": "pages/fontPage/index",
-			"style": {
-				"navigationBarTitleText": "球场列表"
-			}
-		},
-		{
-			"path":"pages/conTest/index",
-			"style":{
-				"navigationBarTitleText":"我的比赛",
-				"usingComponents":{
-					"van-button":"/wxcomponents/@vant/dist/button/index"
-				}
-			}
-		},
-		// {
-		// 	"path":"pages/conTest/Detail",
-		// 	"style":{
-		// 		"navigationBarTitleText":"比赛详情"
-		// 	}
-		// },
-		{
-			"path":"pages/proFile/index",
-			"style":{
-				"navigationBarTitleText":"个人信息"
-			}
-		}
-	],
-	"globalStyle": {
-		"navigationBarTextStyle": "black",
-		"navigationBarTitleText": "uni-app",
-		"navigationBarBackgroundColor": "#F8F8F8",
-		"backgroundColor": "#F8F8F8"
-	},
-	"tabBar":{
-		"list":[
-			{
-				"pagePath":"pages/fontPage/index",
-				"text":"球场列表"
-			},
-			{
-				"pagePath":"pages/conTest/index",
-				"text":"我的比赛"
-			},
-			{
-				"pagePath":"pages/proFile/index",
-				"text":"个人首页"
-			}
-		]
-	}
+  "pages": [
+    {
+      "path": "pages/fontPage/index",
+      "style": {
+        "navigationBarTitleText": "球场列表",
+        "navigationBarBackgroundColor": "#1989FA",
+        "enablePullDownRefresh": true,
+        "navigationBarTextStyle": "white"
+      }
+    },
+    {
+      "path": "pages/playgroundDetail/playgroundDetail",
+      "style": {
+        "navigationBarTitleText": "球场详情",
+        "usingComponents": {
+          "van-button": "/wxcomponents/dist/button/index",
+          "van-icon": "/wxcomponents/dist/icon/index",
+          "van-overlay": "/wxcomponents/dist/overlay/index"
+        }
+      }
+    },
+    {
+      "path": "pages/conTest/index",
+      "style": {
+        "navigationBarTitleText": "我的比赛",
+        "usingComponents": {
+          "van-button": "/wxcomponents/dist/button/index"
+        }
+      }
+    },
+    {
+      "path": "pages/conTest/Detail",
+      "style": {
+        "navigationBarTitleText": "比赛详情",
+        "usingComponents": {
+          "van-cell": "/wxcomponents/dist/cell/index",
+          "van-button": "/wxcomponents/dist/button/index"
+        }
+      }
+    },
+    {
+      "path": "pages/userHome/userHome",
+      "style": {
+        "navigationBarTitleText": "个人主页",
+        "usingComponents": {
+          "van-button": "/wxcomponents/dist/button/index",
+          "van-cell": "/wxcomponents/dist/cell/index",
+          "van-cell-group": "/wxcomponents/dist/cell-group/index",
+          "van-image": "/wxcomponents/dist/image/index",
+          "van-grid": "/wxcomponents/dist/grid/index",
+          "van-grid-item": "/wxcomponents/dist/grid-item/index",
+          "van-action-sheet": "/wxcomponents/dist/action-sheet/index"
+        }
+      }
+    },
+    {
+      "path": "pages/userHome/navigatorPages/aboutUs",
+      "style": {
+        "navigationBarTitleText": "关于我们"
+      }
+    },
+    {
+      "path": "pages/userHome/navigatorPages/starGround",
+      "style": {
+        "navigationBarTitleText": "收藏场地"
+      }
+    }
+  ],
+  "globalStyle": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "uni-app",
+    "navigationBarBackgroundColor": "#F8F8F8",
+    "backgroundColor": "#F8F8F8",
+    "usingComponents": {
+      "van-button": "/wxcomponents/dist/button/index",
+      "van-cell": "/wxcomponents/dist/cell/index",
+      "van-cell-group": "/wxcomponents/dist/cell-group/index",
+      "van-image": "/wxcomponents/dist/image/index",
+      "van-grid": "/wxcomponents/dist/grid/index",
+      "van-grid-item": "/wxcomponents/dist/grid-item/index",
+      "van-action-sheet": "/wxcomponents/dist/action-sheet/index",
+      "van-tag": "/wxcomponents/dist/tag/index",
+      "van-rate": "/wxcomponents/dist/rate/index"
+    }
+  },
+  "tabBar": {
+    "list": [
+      {
+        "pagePath": "pages/fontPage/index",
+        "text": "球场列表"
+      },
+      {
+        "pagePath": "pages/conTest/index",
+        "text": "我的比赛"
+      },
+      {
+        "pagePath": "pages/userHome/userHome",
+        "text": "个人主页"
+      }
+    ],
+    "backgroundColor": "#F8F8F8"
+  }
 }

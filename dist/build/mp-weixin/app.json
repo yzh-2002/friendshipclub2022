@@ -1,9 +1,12 @@
 {
   "pages": [
-    "pages/conTest/Detail",
     "pages/fontPage/index",
+    "pages/playgroundDetail/playgroundDetail",
     "pages/conTest/index",
-    "pages/proFile/index"
+    "pages/conTest/Detail",
+    "pages/userHome/userHome",
+    "pages/userHome/navigatorPages/aboutUs",
+    "pages/userHome/navigatorPages/starGround"
   ],
   "subPackages": [],
   "window": {
@@ -23,15 +26,27 @@
         "text": "我的比赛"
       },
       {
-        "pagePath": "pages/proFile/index",
-        "text": "个人首页"
+        "pagePath": "pages/userHome/userHome",
+        "text": "个人主页"
       }
-    ]
+    ],
+    "backgroundColor": "#F8F8F8"
   },
   "permission": {
     "scope.userLocation": {
       "desc": "您的位置消息将用于小程序位置接口的效果展示"
     }
   },
-  "usingComponents": {}
+  "usingComponents": {
+    "van-button": "/wxcomponents/dist/button/index",
+    "van-cell": "/wxcomponents/dist/cell/index",
+    "van-cell-group": "/wxcomponents/dist/cell-group/index",
+    "van-image": "/wxcomponents/dist/image/index",
+    "van-grid": "/wxcomponents/dist/grid/index",
+    "van-grid-item": "/wxcomponents/dist/grid-item/index",
+    "van-action-sheet": "/wxcomponents/dist/action-sheet/index",
+    "van-tag": "/wxcomponents/dist/tag/index",
+    "van-rate": "/wxcomponents/dist/rate/index"
+  },
+  "sitemapLocation": "sitemap.json"
 }

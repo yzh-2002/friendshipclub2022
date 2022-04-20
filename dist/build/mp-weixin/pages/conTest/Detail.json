@@ -1,7 +1,7 @@
 {
   "navigationBarTitleText": "比赛详情",
   "usingComponents": {
-    "van-cell": "/wxcomponents/@vant/dist/cell/index",
-    "van-button": "/wxcomponents/@vant/dist/button/index"
+    "van-cell": "/wxcomponents/dist/cell/index",
+    "van-button": "/wxcomponents/dist/button/index"
   }
 }

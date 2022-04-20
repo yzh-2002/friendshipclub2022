@@ -21,14 +21,30 @@
              </div>
         </div>
         <div class="footer">
-            <van-button icon="star" type="primary" class="collect"></van-button>
+            <van-button icon="star" type="primary" class="collect" @click="collect"></van-button>
             <van-button icon="plus" type="primary" class="join"></van-button>
+            <!-- <Icon name="chat-o" /> -->
         </div>
   </div>
 </template>
 
 <script>
 export default {
+    name:"detail",
+    methods:{
+        collect(){
+            wx.cloud.callFunction({
+                name:"star",
+                data:{
+                    "_id":1
+                }
+            }).then(res=>{
+                console.log(res)
+            }).catch(err=>{
+                console.log(err);
+            })
+        }
+    }
 
 }
 </script>

@@ -112,15 +112,28 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
+
+var _userLogin = __webpack_require__(/*! @/api/userLogin */ 79);
+
+var _vue = _interopRequireDefault(__webpack_require__(/*! vue */ 3));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 var _default = {
   onLaunch: function onLaunch() {
-    console.log('App Launch');
+    console.log("App Launch"); // 初始化Vue全局变量上的userInformation
+
+    _vue.default.prototype.userInformation = {}; // 获取用户个人信息+地理位置信息
+
+    (0, _userLogin.userLogin)().then(function (res) {
+      console.log(res);
+    });
   },
   onShow: function onShow() {
-    console.log('App Show');
+    console.log("App Show");
   },
   onHide: function onHide() {
-    console.log('App Hide');
+    console.log("App Hide");
   }
 };
 exports.default = _default;

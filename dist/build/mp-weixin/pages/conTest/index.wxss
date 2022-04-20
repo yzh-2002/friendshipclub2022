@@ -41,5 +41,26 @@
     display: flex;
     justify-content: center;
 }
+.noLogin.data-v-5128890e{
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+.title.data-v-5128890e{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px;
+    padding: 35px;
+    font-size: x-large;
+    color: red;
+}
+.noLogin>button.data-v-5128890e{
+    background-color: #1989FA;
+    color: #FFFFFF;
+}
 
 
