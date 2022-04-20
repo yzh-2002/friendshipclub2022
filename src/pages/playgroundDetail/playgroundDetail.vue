@@ -118,11 +118,11 @@ export default {
       this.show = true;
     },
     onChange(event) {
-      this.value = event.detail;
+      // this.value = event.detail;
       wx.cloud.callFunction({
         name: "setScore",
         data: {
-          openid: "111",
+          openid: "o-eif5KR7Z5uXWyYCi9ZLcqT0yz0",
           _id: this.data._id,
           score: event.detail,
         },
@@ -155,6 +155,7 @@ export default {
         },
         complete: () => {
           this.show = false;
+          this.disabled = true;
           this.getplaygroundDetail(); //重新获取打分后的分数
         },
       });

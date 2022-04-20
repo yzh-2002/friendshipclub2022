@@ -44,6 +44,8 @@
     "van-image": "/wxcomponents/dist/image/index",
     "van-grid": "/wxcomponents/dist/grid/index",
     "van-grid-item": "/wxcomponents/dist/grid-item/index",
-    "van-action-sheet": "/wxcomponents/dist/action-sheet/index"
+    "van-action-sheet": "/wxcomponents/dist/action-sheet/index",
+    "van-tag": "/wxcomponents/dist/tag/index",
+    "van-rate": "/wxcomponents/dist/rate/index"
   }
 }
