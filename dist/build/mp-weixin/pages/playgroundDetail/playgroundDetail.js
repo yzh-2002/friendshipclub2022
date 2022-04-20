@@ -259,19 +259,65 @@ var _default = {
       });
     },
     star: function star() {
-      wx.cloud.callFunction({});
+      wx.cloud.callFunction({
+        name: "star",
+        data: {
+          _id: this.id
+        },
+        success: function success(res) {
+          if (res.result.status === "200") {
+            uni.showToast({
+              title: "收藏成功",
+              duration: 2000
+            });
+          } else if (res.result.status === "400") {
+            uni.showToast({
+              title: "收藏失败",
+              icon: "error",
+              duration: 2000
+            });
+          } else if (res.result.status === "401") {
+            uni.showToast({
+              title: "请先登录",
+              icon: "error",
+              duration: 2000
+            });
+          } else {
+            uni.showToast({
+              title: "已经收藏过啦",
+              icon: "error",
+              duration: 2000
+            });
+          }
+        },
+        fail: function fail(err) {
+          uni.showToast({
+            title: "收藏失败",
+            icon: "error",
+            duration: 2000
+          });
+        }
+      });
     },
     setScore: function setScore() {
       this.show = true;
+      wx.cloud.callFunction({
+        name: "storeRateTime",
+        data: {
+          _id: this.id,
+          time: Date.now()
+        },
+        success: function success(res) {
+          console.log(res);
+        }
+      });
     },
     onChange: function onChange(event) {
       var _this2 = this;
 
-      // this.value = event.detail;
       wx.cloud.callFunction({
         name: "setScore",
         data: {
-          openid: "o-eif5KR7Z5uXWyYCi9ZLcqT0yz0",
           _id: this.data._id,
           score: event.detail
         },
@@ -281,7 +327,7 @@ var _default = {
               title: "打分成功",
               duration: 2000
             });
-          } else if (res.result.status === "200") {
+          } else if (res.result.status === "400") {
             uni.showToast({
               title: "打分失败",
               icon: "error",
@@ -304,7 +350,6 @@ var _default = {
         },
         complete: function complete() {
           _this2.show = false;
-          _this2.disabled = true;
 
           _this2.getplaygroundDetail(); //重新获取打分后的分数
 

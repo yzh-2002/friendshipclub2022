@@ -112,17 +112,63 @@ export default {
       });
     },
     star() {
-      wx.cloud.callFunction({});
+      wx.cloud.callFunction({
+        name: "star",
+        data: {
+          _id: this.id,
+        },
+        success: (res) => {
+          if (res.result.status === "200") {
+            uni.showToast({
+              title: "收藏成功",
+              duration: 2000,
+            });
+          } else if (res.result.status === "400") {
+            uni.showToast({
+              title: "收藏失败",
+              icon: "error",
+              duration: 2000,
+            });
+          } else if (res.result.status === "401") {
+            uni.showToast({
+              title: "请先登录",
+              icon: "error",
+              duration: 2000,
+            });
+          } else {
+            uni.showToast({
+              title: "已经收藏过啦",
+              icon: "error",
+              duration: 2000,
+            });
+          }
+        },
+        fail: (err) => {
+          uni.showToast({
+            title: "收藏失败",
+            icon: "error",
+            duration: 2000,
+          });
+        },
+      });
     },
     setScore() {
       this.show = true;
+      wx.cloud.callFunction({
+        name: "storeRateTime",
+        data: {
+          _id: this.id,
+          time: Date.now(),
+        },
+        success: (res) => {
+          console.log(res);
+        },
+      });
     },
     onChange(event) {
-      // this.value = event.detail;
       wx.cloud.callFunction({
         name: "setScore",
         data: {
-          openid: "o-eif5KR7Z5uXWyYCi9ZLcqT0yz0",
           _id: this.data._id,
           score: event.detail,
         },
@@ -132,7 +178,7 @@ export default {
               title: "打分成功",
               duration: 2000,
             });
-          } else if (res.result.status === "200") {
+          } else if (res.result.status === "400") {
             uni.showToast({
               title: "打分失败",
               icon: "error",
@@ -155,7 +201,6 @@ export default {
         },
         complete: () => {
           this.show = false;
-          this.disabled = true;
           this.getplaygroundDetail(); //重新获取打分后的分数
         },
       });

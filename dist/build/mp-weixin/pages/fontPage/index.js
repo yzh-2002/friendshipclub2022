@@ -160,7 +160,8 @@ var Playground = function Playground() {
 var _default = {
   data: function data() {
     return {
-      playground: []
+      playground: [],
+      type: "全部"
     };
   },
   onLoad: function onLoad() {
@@ -196,6 +197,18 @@ var _default = {
         }
       });
       console.log("点击成功");
+    },
+    changeType: function changeType(type) {
+      this.type = type.detail.title;
+    }
+  },
+  computed: {
+    showEmpty: function showEmpty() {
+      var _this2 = this;
+
+      return this.playground.every(function (item) {
+        return item.type.sport !== _this2.type;
+      }) && this.type !== "全部";
     }
   },
   components: {

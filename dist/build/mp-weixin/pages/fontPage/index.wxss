@@ -6,6 +6,11 @@
   width: 100%;
   height: 100%;
 }
+.changetype {
+  width: 700rpx;
+  height: 60rpx;
+  margin: 60rpx auto 20rpx;
+}
 .title {
   width: 100%;
   height: 60rpx;
@@ -22,5 +27,10 @@
   display: block;
   margin: 0 auto;
   border-bottom: 8rpx solid #1989fa;
+}
+.empty {
+  width: 600rpx;
+  height: 300rpx;
+  margin: 20rpx auto;
 }
 

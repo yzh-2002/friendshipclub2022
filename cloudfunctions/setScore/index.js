@@ -8,13 +8,16 @@ cloud.init({
 
 // 云函数入口函数
 exports.main = async (event, context) => {
+  const wxContext = cloud.getWXContext();
+  const openid = wxContext.OPENID; //用户ID
+
   const db = cloud.database();
   const user = db.collection("user");
   const playground = db.collection("playground");
 
-  const { openid, _id, score } = event;
+  const { _id, score } = event;
 
-  const userResult = await user.where({ openid }).get();
+  const userResult = await user.where({ openid: openid }).get();
   const playResult = await playground.where({ _id }).get();
 
   const playscore = playResult.data[0].scoreObj.score;
