@@ -24,6 +24,4 @@ exports.main = async (event, context) => {
   }else{
     return 401;
   }
-
-  
 }
