@@ -144,6 +144,12 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
+
+var _vue = _interopRequireDefault(__webpack_require__(/*! vue */ 3));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+//
 //
 //
 //
@@ -175,21 +181,13 @@ var _default = {
     return {
       avatar: "https://img.yzcdn.cn/vant/cat.jpeg",
       introduction: "123",
-      nickname: "1"
+      nickname: _vue.default.prototype.userInformation.nickName,
+      credit: _vue.default.prototype.userInformation.credit
     };
   },
   methods: {
     test: function test() {
-      wx.cloud.callFunction({
-        name: 'getUserInfo',
-        data: {
-          _id: "2c9907ee625e16a50072f06c31386cef"
-        }
-      }).then(function (res) {
-        var nickname = res.result.data.nickName;
-        console.log(res.result.data.nickName);
-        return nickname;
-      });
+      console.log(this.introduction);
     },
     toAboutUs: function toAboutUs() {
       wx.navigateTo({
