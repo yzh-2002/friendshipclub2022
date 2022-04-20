@@ -41,7 +41,7 @@ export default {
 .container {
   width: 700rpx;
   height: 300rpx;
-  margin: 60rpx auto 0;
+  margin: 60rpx auto 40rpx;
   display: flex;
   border-radius: 60rpx;
   overflow: hidden;

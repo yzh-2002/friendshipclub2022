@@ -6,35 +6,8 @@ var qqmapsdk =new QQMapWX({
     key:"RIDBZ-YN3KK-SBAJM-ADSAV-2U427-ZJBCM"
 });
 
-// 获取gps信息（弹窗申请等等）
-function GetLocation(){
-   return new Promise((resolve,reject)=>{
-    uni.getSetting({
-        success:(res)=>{
-            if (res.authSetting['scope.userLocation']){
-                uni.authorize({
-                    scope:"scope.userLocation",
-                    success:()=>{
-                        uni.getLocation({
-                            type:'wgs84',
-                            success:(res)=>{
-                                resolve(res)
-                            }
-                        })
-                    },
-                    fail:(err)=>{
-                        reject(err)
-                    }
-                })
-            }else{
-                // 需要提示他一些功能无法使用
-                console.log("未授权")
-            }
-        }
-    })
-   })
-}
 
+// 将地址坐标转换为实际地址
 function ReverseGeocoder({latitude,longitude}){
     qqmapsdk.reverseGeocoder({
         location:{
