@@ -17,7 +17,7 @@
       <van-cell title="修改简介" is-link @click="showPopup" />
       <van-popup show="{{ show }}" @close="onClose">
         <input type="text" v-model="introduction">
-        <button @click="onClose">确认修改</button>
+        <button @click="reWrite">确认修改</button>
       </van-popup>
       <van-cell title="用户名" :value=nickname />
       <van-cell title="信誉分" :value=credit />
@@ -38,7 +38,7 @@ export default {
   data (){
     return {
       avatar:"https://img.yzcdn.cn/vant/cat.jpeg",
-      introduction:"123",
+      introduction:"",
       nickname:Vue.prototype.userInformation.nickName,
       credit:0,
       show: false
@@ -55,7 +55,15 @@ export default {
     },
     //修改简历
     reWrite(){
-      // this.introduction = '12'
+      wx.cloud.callFunction({
+        name:'reWriteIntroduction',
+        data:{
+          _id: '5464a294625fed1e0189b16e708e2462',
+          intro:"666"
+        }
+      }).then(res=>{
+        console.log(res.result)
+      })
     },
     // 两个跳转按钮
     toAboutUs(){
@@ -78,7 +86,6 @@ export default {
           _id: '5464a294625fed1e0189b16e708e2462'
         }
       }).then(res=>{
-        console.log(res.result.data.credit)
         this.introduction = res.result.data.introduction
         this.credit = res.result.data.credit
       })
