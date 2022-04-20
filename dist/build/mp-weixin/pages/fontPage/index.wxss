@@ -1,0 +1,26 @@
+
+.swiper {
+  height: 150px;
+}
+.swiper-item image {
+  width: 100%;
+  height: 100%;
+}
+.title {
+  width: 100%;
+  height: 60rpx;
+  margin: 40rpx 0;
+  text-align: center;
+  line-height: 60rpx;
+  font-size: 40rpx;
+  font-weight: 700;
+}
+.title::after {
+  content: "";
+  width: 120rpx;
+  height: 4rpx;
+  display: block;
+  margin: 0 auto;
+  border-bottom: 8rpx solid #1989fa;
+}
+
