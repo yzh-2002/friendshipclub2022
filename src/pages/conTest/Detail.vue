@@ -14,9 +14,9 @@
              </div>
              <div class="persons">
                  <div class="header">参与人员</div>
-                 <div class="person" v-for="person in item.person" :key="person">
-                     <img src="../../static/logo.png" alt="">
-                     <div class="name">xxxxx</div>
+                 <div class="person" v-for="person in personList" :key="person">
+                     <img :src="person.avatarUrl" alt="">
+                     <div class="name">{{person.nickName}}</div>
                  </div>
              </div>
         </div>
@@ -28,11 +28,13 @@
 </template>
 
 <script>
+import {getContestUser} from "@/api/getContestUser"
 export default {
     name:"detail",
     data(){
         return{
-            item:{}
+            item:{},
+            personList:[]
         }
     },
     methods:{
@@ -40,7 +42,7 @@ export default {
             wx.cloud.callFunction({
                 name:"star",
                 data:{
-                    "_id":1
+                    "_id":this.item._id
                 }
             }).then(res=>{
                 console.log(res)
@@ -50,8 +52,14 @@ export default {
         }
     },
     onLoad:function(option){
-        const item =JSON.parse(option.item)
+        const item =JSON.parse(option.item) //接收跳转前的页面
         this.item =item
+        // 获取参与比赛的人员姓名
+        getContestUser(item._id).then(res=>{
+            this.personList =res.result
+        }).catch(err=>{
+            console.log(err)
+        })
     }
 
 }

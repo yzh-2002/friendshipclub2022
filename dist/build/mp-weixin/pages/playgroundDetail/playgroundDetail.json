@@ -1,8 +1,0 @@
-{
-  "navigationBarTitleText": "球场详情",
-  "usingComponents": {
-    "van-button": "/wxcomponents/dist/button/index",
-    "van-icon": "/wxcomponents/dist/icon/index",
-    "van-overlay": "/wxcomponents/dist/overlay/index"
-  }
-}
