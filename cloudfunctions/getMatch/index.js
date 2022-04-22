@@ -7,23 +7,27 @@ cloud.init({
 
 
 exports.main = async (event,context)=>{
-    // let { OPENID, APPID } = cloud.getWXContext() // 这里获取到的 openId 和 appId 是可信的
+    const wxContext = cloud.getWXContext() 
+    const openId =wxContext.OPENID;
     const db = cloud.database();
     const _ = db.command;//获取数据库操作方法
 
-    let {openId,_id} = event;
-    //openId是需要push进的playground的对象
-    //_id是用户的id,需要被存进playground对象里
-    const user = await db.collection('user').doc(_id).get()
+    let {_id} = event;
+    // _id是球场id，需要把用户的openid传进去
+    const playground = await db.collection('playground').doc(_id).get()
 
-    if (user.data){
-        await db.collection('playground').doc(openId).update({
-            data: {
-                person:_.push(_id)
-            }
-        })
-
-        return {status:200,msg:'success'}
+    if (playground.data){
+        // 先查看该用户是否已经预约
+        if (playground.data.person.indexOf(openId)!=-1){
+            return {status:201,msg:'用户已经预约过比赛'}
+        }else{
+            await db.collection('playground').doc(_id).update({
+                data: {
+                    person:_.push(openId)
+                }
+            })
+            return {status:200,msg:'success'}
+        }
     }
 
 }

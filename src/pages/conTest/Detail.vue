@@ -6,44 +6,64 @@
         <div class="detail">
              <div class="header">基本信息</div>
              <div class="content">
-                 <van-cell title="球场名称" icon="location-o" value="沙河一号场" />
-                 <van-cell title="联系方式" icon="location-o" value="18790342103" />
+                 <van-cell title="球场名称" icon="location-o" :value="item.name" />
                  <van-cell title="预约时间" icon="location-o" value="10：00~22：00" />
-                 <van-cell title="人均消费" icon="location-o" value="￥0元" />
-                 <van-cell title="球场评分" icon="location-o" value="5.0" />
+                 <van-cell title="人均消费" icon="location-o" :value="'￥'+item.price+'元'" />
+                 <van-cell title="球场评分" icon="location-o" :value="scoreObj.score/scoreObj.people" />
              </div>
              <div class="persons">
                  <div class="header">参与人员</div>
-                 <div class="person">
-                     <img src="../../static/logo.png" alt="">
-                     <div class="name">xxxxx</div>
+                 <div class="person" v-for="person in personList" :key="person">
+                     <img :src="person.avatarUrl" alt="">
+                     <div class="name">{{person.nickName}}</div>
                  </div>
              </div>
         </div>
         <div class="footer">
-            <van-button icon="star" type="primary" class="collect" @click="collect"></van-button>
-            <van-button icon="plus" type="primary" class="join"></van-button>
-            <!-- <Icon name="chat-o" /> -->
+            <van-button round type="info" plain @click="star">点我收藏</van-button>
+            <van-button round type="info" plain @click="quit" 
+              >退出比赛</van-button
+            >
         </div>
   </div>
 </template>
 
 <script>
+import {getContestUser} from "@/api/getContestUser"
 export default {
     name:"detail",
+    data(){
+        return{
+            item:{},
+            personList:[]
+        }
+    },
     methods:{
-        collect(){
+        star(){
             wx.cloud.callFunction({
                 name:"star",
                 data:{
-                    "_id":1
+                    "_id":this.item._id
                 }
             }).then(res=>{
                 console.log(res)
             }).catch(err=>{
                 console.log(err);
             })
+        },
+        quit(){
+            // 退出比赛
         }
+    },
+    onLoad:function(option){
+        const item =JSON.parse(option.item) //接收跳转前的页面
+        this.item =item
+        // 获取参与比赛的人员姓名
+        getContestUser(item._id).then(res=>{
+            this.personList =res.result
+        }).catch(err=>{
+            console.log(err)
+        })
     }
 
 }
@@ -53,7 +73,6 @@ export default {
 .contest-view{
     width: 100%;
     height: 100%;
-    position: relative;
 }
 .banner{
     width: 100%;
@@ -112,24 +131,14 @@ export default {
     margin: 0 20px 0 40px;
 }
 .footer{
-    position: absolute;
-    bottom: 20px;
     width: 100%;
-    display: flex;
-    justify-content: space-between;
+  height: 120rpx;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  position: fixed;
+  bottom: 0;
+  background-color: #f4f4f4;
 }
-.footer :nth-child(n){
-    width: 60px;
-    height: 60px;
-    border-radius: 30px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-.collect{
-    margin-left: 20px;
-}
-.join{
-    margin-right: 20px;
-}
+
 </style>
