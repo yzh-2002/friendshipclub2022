@@ -3,7 +3,7 @@
     <div class="contest">
       <div class="header">我的收藏</div>
       <div class="list">
-        <Contest class="item" v-for='item in list' :key="item"/>
+        <Contest class="item" v-for='item in list' :key="item" :item="item"/>
       </div>
     </div>
   </div>
@@ -11,27 +11,26 @@
 
 <script>
 import Contest from "pages/conTest/Contest"
-import Vue from "vue";
+import {getStar} from "@/api/getStar"
 
 export default {
   name:"contest-index",
   components: { Contest },
   data(){
     return {
-      list:["1",2,3,4]
+      list:[]
     }
   },
   methods:{
-    starList(){
-      this.list.map((value)=>{
-        for (let i =0;i<Vue.prototype.userInformation.star.length;i++){
-          if (value.toString() === Vue.prototype.userInformation.star[i]){
-            data.list.push(value);
-          }
-        }
-      })
-      this.list.splice(0,this.list.length);
-    }
+  },
+  created(){
+    // 获取用户收藏列表
+    getStar().then(res=>{
+      this.list =res.result
+      console.log(this.list)
+    }).catch(err=>{
+      console.log(err)
+    })
   }
 }
 </script>

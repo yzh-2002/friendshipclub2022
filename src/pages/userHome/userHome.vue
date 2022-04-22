@@ -7,18 +7,24 @@
         round
         width="5rem"
         height="5rem"
-        :src=avatar
+        :src="avatar"
     />
 
 <!--    用户信息-->
     <div>{{ introduction }}</div>
     </view>
     <van-cell-group class="userMsg">
-      <van-cell title="用户名" :value=nickname @click="test"/>
-      <van-cell title="信誉分" :value=credit />
+      <van-cell title="修改简介" is-link @click="showPopup" />
+      <van-popup :show="show" @close="onClose">
+        <input type="text" v-model="introduction">
+        <button @click="onClose">确认修改</button>
+      </van-popup>
+      <van-cell title="用户名" :value="nickname" />
+      <van-cell title="信誉分" :value="credit" />
       <van-cell title="收藏场地" @click="toStarGround"/>
       <van-cell title="关于我们" class="about" @click="toAboutUs"/>
     </van-cell-group>
+
   </view>
 
 
@@ -26,20 +32,32 @@
 
 <script>
 import Vue from "vue";
+import {getUserIntroduction} from "@/api/getUserIntroduction"
 export default {
   name: "userHome",
   data (){
     return {
-      avatar:"https://img.yzcdn.cn/vant/cat.jpeg",
-      introduction:"123",
+      avatar:Vue.prototype.userInformation.avatarUrl,
+      introduction:"",
       nickname:Vue.prototype.userInformation.nickName,
-      credit:Vue.prototype.userInformation.credit
+      credit:0,
+      show: false
     }
   },
   methods:{
-    test(){
-      console.log(this.introduction)
+    // 控制简介修改弹出
+    showPopup() {
+      this.show = true
     },
+
+    onClose() {
+       getUserIntroduction(this.introduction,true)
+      .then(res=>{
+        console.log(res.result)
+      })
+       this.show = false;
+    },
+    // 两个跳转按钮
     toAboutUs(){
       wx.navigateTo({
         url:'navigatorPages/aboutUs'
@@ -49,7 +67,16 @@ export default {
       wx.navigateTo({
         url:'navigatorPages/starGround'
       })
-    }
+    },
+  },
+
+  //组件创建时获取credit和introduction
+  created() {
+      getUserIntroduction('',false)
+      .then(res=>{
+        // 赋值
+        this.introduction =res.result.data[0].introduction=='' ? '这个人还没有个性签名':res.result.data[0].introduction
+      })
   }
 }
 </script>
@@ -64,13 +91,9 @@ export default {
   background-color: skyblue;
   border-top: 1rem solid skyblue;
 }
-.avatar {
-  /*border: 1px solid skyblue;*/
-}
-
 .userMsg {
   position: relative;
-  top: 5rem;
+  top: 3rem;
   text-align: left;
 }
 

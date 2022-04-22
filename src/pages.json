@@ -55,7 +55,8 @@
           "van-image": "/wxcomponents/dist/image/index",
           "van-grid": "/wxcomponents/dist/grid/index",
           "van-grid-item": "/wxcomponents/dist/grid-item/index",
-          "van-action-sheet": "/wxcomponents/dist/action-sheet/index"
+          "van-action-sheet": "/wxcomponents/dist/action-sheet/index",
+          "van-popup": "/wxcomponents/dist/popup/index"
         }
       }
     },
@@ -93,14 +94,20 @@
     "list": [
       {
         "pagePath": "pages/fontPage/index",
+        "iconPath":"static/common/tabBar/ground_icon.png",
+        "selectedIconPath":"static/common/tabBar/ground_icon_selected.png",
         "text": "球场列表"
       },
       {
         "pagePath": "pages/conTest/index",
+        "iconPath":"static/common/tabBar/place_icon.png",
+        "selectedIconPath":"static/common/tabBar/place_icon_selected.png",
         "text": "我的比赛"
       },
       {
         "pagePath": "pages/userHome/userHome",
+        "iconPath":"static/common/tabBar/person_icon.png",
+        "selectedIconPath":"static/common/tabBar/person_icon_selected.png",
         "text": "个人主页"
       }
     ],
