@@ -58,6 +58,10 @@ export default {
     // 获取场地列表
     this.getPlayground();
   },
+  onShow(){
+    // 重新获取场地列表
+    this.getPlayground()
+  },
   methods: {
     getPlayground() {
       wx.cloud.callFunction({
@@ -78,7 +82,6 @@ export default {
     goDetail(id) {
       uni.navigateTo({
         url: `/pages/playgroundDetail/playgroundDetail?id=${id}`,
-        // url:"/pages/playgroundDetail",
         success: () => {
           console.log("跳转到场地详情页面成功!!");
         },

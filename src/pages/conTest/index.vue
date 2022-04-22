@@ -5,13 +5,14 @@
         </div>
         <div class="contest">
             <div class="header">我的比赛</div>
-            <div class="list" v-if="isLogin">
+            <div class="list" v-if="isLogin && JSON.stringify(list)!='[]'">
                 <Contest class="item" v-for='item in list' :key="item" :item="item"/>
             </div>
-            <div v-else class="noLogin">
+            <div v-if="!isLogin" class="noLogin">
                 <div class="title">尚未登录！！</div>
                 <button @click="login">点击登录</button>
             </div>
+            <van-empty v-if="JSON.stringify(list)=='[]' && isLogin" description="暂无比赛，快去球场列表报名吧！！" />
         </div>
        </div>
 </template>
@@ -41,13 +42,17 @@ export default {
                     "longitude":res.result.data.location.longitude,
                     "latitude":res.result.data.location.latitude
                 }
-                // 更新isLogin
-                this.isLogin =true;
+                // 登录之后要获取比赛列表
+                getUserContest().then(res=>{
+                    console.log("获取我的比赛列表：",res);
+                    this.list =res.result.data
+                     // 更新isLogin
+                    this.isLogin =true;
+                })
             })
         }
     },
-    // 首先判断用户是否登录
-    created(){
+    onShow(){
         // 根据Vue.prototype.userInformation即可知道其是否已经登录了
         if (JSON.stringify(Vue.prototype.userInformation)=='{}'){
             this.isLogin =false
