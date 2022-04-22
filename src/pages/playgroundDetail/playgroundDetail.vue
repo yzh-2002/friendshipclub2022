@@ -46,7 +46,7 @@
     <view class="title">注意事项</view>
     <view class="notice">{{ data.notice }}</view>
     <view class="button">
-      <van-button round type="info" plain @click="star">点我收藏</van-button>
+      <van-button round type="info" plain @click="star">{{collect}}</van-button>
       <van-button round type="info" plain @click="join" :disabled="disabled">{{
         state
       }}</van-button>
@@ -81,6 +81,7 @@ export default {
       show: false,
       value: 3,
       disabled: false,
+      flag:true //标识该场地是否已被收藏
     };
   },
   onLoad(options) {
@@ -88,11 +89,43 @@ export default {
     console.log("该场地的id：", this.id);
     // 获取场地详情信息
     this.getplaygroundDetail();
+    wx.cloud.callFunction({
+      name:"getUserIntroduction",
+      data:{
+        flag:false,
+        newValue:""
+      }
+    }).then(res=>{
+      // 检测场地id是否在用户收藏里
+      if (res.result.data[0].star.indexOf(this.id)!=-1){
+        // 说明在里面
+        this.flag =false
+      }else{
+        this.flag =true
+      }
+    })
   },
   onShow(options) {
     this.id = options.id;
     // 获取场地详情信息
     this.getplaygroundDetail()
+    // 需要更新flag，是否处于收藏状态
+    // 这里可以借用getUserIntroduction函数获取用户信息
+    wx.cloud.callFunction({
+      name:"getUserIntroduction",
+      data:{
+        flag:false,
+        newValue:""
+      }
+    }).then(res=>{
+      // 检测场地id是否在用户收藏里
+      if (res.result.data[0].star.indexOf(this.id)!=-1){
+        // 说明在里面
+        this.flag =false
+      }else{
+        this.flag =true
+      }
+    })
   },
   computed: {
     score() {
@@ -119,6 +152,9 @@ export default {
         return "预约比赛";
       }
     },
+    collect(){
+      return this.flag ?'点击收藏':"取消收藏"
+    }
   },
   methods: {
     getplaygroundDetail() {
@@ -141,28 +177,23 @@ export default {
       });
     },
     star() {
+      const that =this
       wx.cloud.callFunction({
         name: "star",
         data: {
           _id: this.id,
+          f:this.flag
         },
         success: (res) => {
           if (res.result.status === "200") {
             uni.showToast({
-              title: "收藏成功",
+              title: `${res.result.msg}`,
               duration: 2000,
-            });
-          } else if (res.result.status === "400") {
-            uni.showToast({
-              title: "收藏失败",
-              icon: "error",
-              duration: 2000,
-            });
-          } else if (res.result.status === "401") {
-            uni.showToast({
-              title: "请先登录",
-              icon: "error",
-              duration: 2000,
+              success:()=>{
+                that.flag =!that.flag //取反（表示此时已经收藏过了）
+              },fail:(err)=>{
+                console.log(err)
+              }
             });
           } else {
             uni.showToast({

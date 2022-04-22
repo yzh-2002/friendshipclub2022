@@ -21,7 +21,7 @@
               <van-button round type="info" plain @click="credit" class="credit">点我打卡</van-button>
         </div>
         <div class="footer">
-            <van-button round type="info" plain @click="star">点我收藏</van-button>
+            <van-button round type="info" plain @click="star">{{collect}}</van-button>
             <van-button round type="info" plain @click="quit" 
               >退出比赛</van-button
             >
@@ -33,26 +33,52 @@
 import {getContestUser} from "@/api/getContestUser"
 import {quitContest} from "@/api/quitContest"
 import {setCreditScore} from "@/api/setCreditScore"
+import {CalculateDistance} from "../../../utils/Applets/calculateDistance"
 export default {
     name:"detail",
     data(){
         return{
             item:{},
-            personList:[]
+            personList:[],
+            flag:true //标识是否已经收藏
         }
     },
     methods:{
         star(){
+            const that =this
             wx.cloud.callFunction({
                 name:"star",
                 data:{
-                    "_id":this.item._id
-                }
-            }).then(res=>{
-                console.log(res)
-            }).catch(err=>{
-                console.log(err);
-            })
+                    "_id":this.item._id,
+                    f:this.flag
+                },
+                success: (res) => {
+                      if (res.result.status === "200") {
+                        uni.showToast({
+                          title: `${res.result.msg}`,
+                          duration: 2000,
+                          success:()=>{
+                            that.flag =!that.flag //取反（表示此时已经收藏过了）
+                          },fail:(err)=>{
+                            console.log(err)
+                          }
+                        });
+                      } else {
+                        uni.showToast({
+                          title: "已经收藏过啦",
+                          icon: "error",
+                          duration: 2000,
+                        });
+                      }
+                    },
+                    fail: (err) => {
+                      uni.showToast({
+                        title: "收藏失败",
+                        icon: "error",
+                        duration: 2000,
+                      });
+                    },
+                })
         },
         quit(){
             // 退出比赛
@@ -88,6 +114,33 @@ export default {
         },
         credit(){
             // 打卡功能（需要确定时间+地点是否合适）
+            wx.cloud.callFunction({
+                name:"credit",
+                data:{
+                    id:this.item._id
+                }
+            }).then(res=>{
+                CalculateDistance([res.result.location]).then(res=>{
+                    const distance =res.result.elements[0].distance;
+                    if (distance>=100){
+                        uni.showModal({
+                            title:"打卡失败",
+                            content:`距离场地${distance}米，请前往场地打卡`
+                        })
+                    }else{
+                        uni.showModal({
+                            title:"打开成功",
+                            content:`成功打开，尽情挥洒汗水吧！！`
+                        })
+                    }
+                })
+                // console.log(res.result.location)
+            })
+        }
+    },
+    computed:{
+        collect(){
+            return this.flag ?'点击收藏':"取消收藏"
         }
     },
     onLoad:function(option){
@@ -99,19 +152,51 @@ export default {
         }).catch(err=>{
             console.log(err)
         })
+        wx.cloud.callFunction({
+      name:"getUserIntroduction",
+      data:{
+        flag:false,
+        newValue:""
+      }
+    }).then(res=>{
+      // 检测场地id是否在用户收藏里
+      if (res.result.data[0].star.indexOf(this.item._id)!=-1){
+        // 说明在里面
+        this.flag =false
+      }else{
+        this.flag =true
+      }
+    })
+    },
+    onShow(){
+        wx.cloud.callFunction({
+          name:"getUserIntroduction",
+          data:{
+            flag:false,
+            newValue:""
+          }
+        }).then(res=>{
+          // 检测场地id是否在用户收藏里
+          if (res.result.data[0].star.indexOf(this.item._id)!=-1){
+            // 说明在里面
+            this.flag =false
+          }else{
+            this.flag =true
+          }
+        })
     }
 
 }
 </script>
 
 <style scoped>
-.contest-view{
+.detail-view{
     width: 100%;
     height: 100%;
 }
 .banner{
     width: 100%;
-    height: 15%;
+    height: 35%;
 }
 .banner>image{
     width: 100%;
@@ -167,6 +252,7 @@ export default {
 }
 .credit{
     margin-top: 10px;
+    margin-bottom: 140rpx;
 }
 .footer{
     width: 100%;
