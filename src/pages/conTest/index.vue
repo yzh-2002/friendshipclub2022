@@ -55,7 +55,7 @@ export default {
             this.isLogin =true
             // 登录成功了才获取活动列表
             getUserContest().then(res=>{
-                console.log(res);
+                console.log("获取我的比赛列表：",res);
                 this.list =res.result.data
             })
         }

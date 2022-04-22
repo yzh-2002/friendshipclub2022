@@ -7,7 +7,7 @@
         round
         width="5rem"
         height="5rem"
-        :src=avatar
+        :src="avatar"
     />
 
 <!--    用户信息-->
@@ -15,12 +15,12 @@
     </view>
     <van-cell-group class="userMsg">
       <van-cell title="修改简介" is-link @click="showPopup" />
-      <van-popup show="{{ show }}" @close="onClose">
+      <van-popup :show="show" @close="onClose">
         <input type="text" v-model="introduction">
         <button @click="onClose">确认修改</button>
       </van-popup>
-      <van-cell title="用户名" :value=nickname />
-      <van-cell title="信誉分" :value=credit />
+      <van-cell title="用户名" :value="nickname" />
+      <van-cell title="信誉分" :value="credit" />
       <van-cell title="收藏场地" @click="toStarGround"/>
       <van-cell title="关于我们" class="about" @click="toAboutUs"/>
     </van-cell-group>
@@ -32,13 +32,13 @@
 
 <script>
 import Vue from "vue";
-
+import {getUserIntroduction} from "@/api/getUserIntroduction"
 export default {
   name: "userHome",
   data (){
     return {
-      avatar:"https://img.yzcdn.cn/vant/cat.jpeg",
-      introduction:"123",
+      avatar:Vue.prototype.userInformation.avatarUrl,
+      introduction:"",
       nickname:Vue.prototype.userInformation.nickName,
       credit:0,
       show: false
@@ -51,11 +51,11 @@ export default {
     },
 
     onClose() {
-      this.show = false
-    },
-    //修改简历
-    reWrite(){
-      // this.introduction = '12'
+       getUserIntroduction(this.introduction,true)
+      .then(res=>{
+        console.log(res.result)
+      })
+       this.show = false;
     },
     // 两个跳转按钮
     toAboutUs(){
@@ -72,15 +72,10 @@ export default {
 
   //组件创建时获取credit和introduction
   created() {
-      wx.cloud.callFunction({
-        name:'getUserInfo',
-        data:{
-          _id: '5464a294625fed1e0189b16e708e2462'
-        }
-      }).then(res=>{
-        console.log(res.result.data.credit)
-        this.introduction = res.result.data.introduction
-        this.credit = res.result.data.credit
+      getUserIntroduction('',false)
+      .then(res=>{
+        // 赋值
+        this.introduction =res.result.data[0].introduction=='' ? '这个人还没有个性签名':res.result.data[0].introduction
       })
   }
 }
@@ -96,10 +91,6 @@ export default {
   background-color: skyblue;
   border-top: 1rem solid skyblue;
 }
-.avatar {
-  /*border: 1px solid skyblue;*/
-}
-
 .userMsg {
   position: relative;
   top: 3rem;

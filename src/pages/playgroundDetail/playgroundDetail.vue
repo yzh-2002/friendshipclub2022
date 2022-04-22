@@ -15,13 +15,6 @@
         </view>
         <view class="infoitem">
           <view class="itemtitle">
-            <van-icon name="comment-o" size="40rpx" id="icon"></van-icon>
-            联系方式
-          </view>
-          <view class="iteminfo">1647652643</view>
-        </view>
-        <view class="infoitem">
-          <view class="itemtitle">
             <van-icon name="clock-o" size="40rpx" id="icon"></van-icon>
             营业时间
           </view>
@@ -47,8 +40,8 @@
     <view class="notice"></view>
     <view class="button">
       <van-button round type="info" plain @click="star">点我收藏</van-button>
-      <van-button round type="info" plain @click="setScore" :disabled="disabled"
-        >点我评分</van-button
+      <van-button round type="info" plain @click="join" :disabled="disabled"
+        >{{state}}</van-button
       >
     </view>
     <van-overlay :show="show">
@@ -71,6 +64,7 @@
 </template>
 
 <script>
+import {joinContest} from "@/api/joinContest"
 export default {
   name: "playgroundDetail",
   data() {
@@ -84,13 +78,33 @@ export default {
   },
   onLoad(options) {
     this.id = options.id;
-    this.getplaygroundDetail();
+    console.log("该场地的id：",this.id)
+    // 获取场地详情信息
+    this.getplaygroundDetail()
   },
   computed: {
     score() {
       //将分数保留一位小数
-      return (this.data.scoreObj.score / this.data.scoreObj.people).toFixed(1);
+      if (this.data.scoreObj){
+        return (this.data.scoreObj.score / this.data.scoreObj.people).toFixed(1);
+      }else{
+        return 5.0
+      }
     },
+    state(){
+      // 如果无人预约就空闲，有人预约查看人数看差几人
+     if(this.data.person){
+        if (this.data.person.length){
+            // 有
+            const rest =this.data.type.limit-this.data.person.length;
+            return rest ? `加入比赛` : '人已满'        
+        }else{
+          return '预约比赛'
+        }
+     }else{
+       return '预约比赛'
+     }
+    }
   },
   methods: {
     getplaygroundDetail() {
@@ -100,6 +114,7 @@ export default {
           _id: this.id,
         },
         success: (res) => {
+          console.log('获取场地详情信息：',res)
           this.data = res.result.data[0];
         },
         fail: (err) => {
@@ -205,6 +220,22 @@ export default {
         },
       });
     },
+    join(){
+      // 加入比赛
+      joinContest(this.id).then(res=>{
+        if (res.result.status==200){
+          uni.showToast({
+            title:"加入比赛成功"
+          })
+          this.disabled =true
+        }else if(res.result.status==201){
+          uni.showToast({
+            title:"请勿重复加入"
+          })
+          this.disabled =false
+        }
+      })
+    }
   },
 };
 </script>

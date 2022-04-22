@@ -8,7 +8,7 @@ export default {
     Vue.prototype.userInformation ={}
     // 获取用户个人信息+地理位置信息
     userLogin().then(res=>{
-      console.log(res)
+      console.log('获取个人信息：',res)
     })
 
   },

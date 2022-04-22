@@ -11,6 +11,9 @@
       <van-tag round type="primary" class="limit"
         >限{{ playground.type.limit }}人</van-tag
       >
+      <van-tag round type="primary" class="state"
+        >{{state}}</van-tag
+      >
       <view class="time">
         <text>营业时间: 10:00-22:00</text>
       </view>
@@ -33,7 +36,18 @@ export default {
       this.$emit("goDetail", id);
     },
   },
-  components: {},
+  computed:{
+    state(){
+      // 如果无人预约就空闲，有人预约查看人数看差几人
+      if (this.playground.person.length){
+        // 有
+        const rest =this.playground.type.limit-this.playground.person.length;
+        return rest ? `差${rest}人` : '人已满'      
+      }else{
+        return '空闲'
+      }
+    }
+  }
 };
 </script>
 
@@ -64,11 +78,15 @@ export default {
   font-size: 40rpx;
   font-weight: 700;
 }
-.info .limit {
+.info .limit,.info .state{
   margin-left: 20rpx;
 }
 .info .time {
   margin: 16rpx 0 16rpx;
+  font-size: 26rpx;
+  color: gray;
+}
+.info .state {
   font-size: 26rpx;
   color: gray;
 }
