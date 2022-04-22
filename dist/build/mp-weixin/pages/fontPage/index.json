@@ -1,0 +1,12 @@
+{
+  "navigationBarTitleText": "球场列表",
+  "navigationBarBackgroundColor": "#1989FA",
+  "enablePullDownRefresh": true,
+  "navigationBarTextStyle": "white",
+  "usingComponents": {
+    "van-tab": "/wxcomponents/dist/tab/index",
+    "van-tabs": "/wxcomponents/dist/tabs/index",
+    "van-empty": "/wxcomponents/dist/empty/index",
+    "playground": "/components/playground/Playground"
+  }
+}

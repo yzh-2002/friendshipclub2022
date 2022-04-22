@@ -41,7 +41,8 @@
         "navigationBarTitleText": "比赛详情",
         "usingComponents": {
           "van-cell": "/wxcomponents/dist/cell/index",
-          "van-button": "/wxcomponents/dist/button/index"
+          "van-button": "/wxcomponents/dist/button/index",
+          "van-icon": "/wxcomponents/dist/icon/index"
         }
       }
     },
@@ -51,13 +52,9 @@
         "navigationBarTitleText": "个人主页",
         "usingComponents": {
           "van-button": "/wxcomponents/dist/button/index",
-          "van-cell": "/wxcomponents/dist/cell/index",
-          "van-cell-group": "/wxcomponents/dist/cell-group/index",
           "van-image": "/wxcomponents/dist/image/index",
-          "van-grid": "/wxcomponents/dist/grid/index",
-          "van-grid-item": "/wxcomponents/dist/grid-item/index",
-          "van-action-sheet": "/wxcomponents/dist/action-sheet/index",
           "van-overlay": "/wxcomponents/dist/overlay/index",
+          "van-icon": "/wxcomponents/dist/icon/index",
           "van-field": "/wxcomponents/dist/field/index"
         }
       }

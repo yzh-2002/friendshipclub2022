@@ -1,5 +1,5 @@
 <template>
- <view class="container">
+  <view class="container">
     <view class="leftimg">
       <image :src="item.img"></image>
     </view>
@@ -23,29 +23,29 @@
 
 <script>
 export default {
-    name:"contest",
-    props:['item'],
-    methods:{
-      navigateToDetail(){
-        uni.navigateTo({
-           url: '/pages/conTest/Detail?item='+JSON.stringify(this.item),
-           success:()=>{
-             console.log("已调用");
-          },
-          fail:(err)=>{
-            console.log(err);
-          }
-        })
-      }
-    }
-}
+  name: "contest",
+  props: ["item"],
+  methods: {
+    navigateToDetail() {
+      uni.navigateTo({
+        url: "/pages/conTest/Detail?item=" + JSON.stringify(this.item),
+        success: () => {
+          console.log("已调用");
+        },
+        fail: (err) => {
+          console.log(err);
+        },
+      });
+    },
+  },
+};
 </script>
 
 <style scoped>
 .container {
   width: 700rpx;
   height: 300rpx;
-  margin: 60rpx auto 40rpx;
+  margin: 30rpx auto 40rpx;
   display: flex;
   border-radius: 60rpx;
   overflow: hidden;
@@ -68,7 +68,8 @@ export default {
   font-size: 40rpx;
   font-weight: 700;
 }
-.info .limit,.info .state{
+.info .limit,
+.info .state {
   margin-left: 20rpx;
 }
 .info .time {
