@@ -18,6 +18,7 @@ export function userLogin(){
                                 type:"wgs84",
                                 success:(local)=>{
                                     //加入全局变量
+                                    console.log("个人信息：",res)
                                     Vue.prototype.userInformation['nickName'] =res.userInfo.nickName;
                                     Vue.prototype.userInformation['gender'] =res.userInfo.gender;
                                     Vue.prototype.userInformation['avatarUrl'] =res.userInfo.avatarUrl;

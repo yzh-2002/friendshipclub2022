@@ -10,16 +10,16 @@
       indicator-active-color="#1989fa"
     >
       <swiper-item class="swiper-item">
-        <image src="../../static/img/1.png"></image>
+        <image src="../../static/fontPage/swiper/1.png"></image>
       </swiper-item>
       <swiper-item class="swiper-item">
-        <image src="../../static/img/2.png"></image>
+        <image src="../../static/fontPage/swiper/2.png"></image>
       </swiper-item>
       <swiper-item class="swiper-item">
-        <image src="../../static/img/3.png"></image>
+        <image src="../../static/fontPage/swiper/3.png"></image>
       </swiper-item>
       <swiper-item class="swiper-item">
-        <image src="../../static/img/4.png"></image>
+        <image src="../../static/fontPage/swiper/4.png"></image>
       </swiper-item>
     </swiper>
     <view class="changetype">
@@ -55,6 +55,7 @@ export default {
     };
   },
   onLoad() {
+    // 获取场地列表
     this.getPlayground();
   },
   methods: {
@@ -63,6 +64,7 @@ export default {
         name: "getPlayground",
         success: (res) => {
           this.playground = res.result.data;
+          console.log('获取场地列表：',this.playground)
         },
         fail: (err) => {
           uni.showToast({
@@ -78,13 +80,12 @@ export default {
         url: `/pages/playgroundDetail/playgroundDetail?id=${id}`,
         // url:"/pages/playgroundDetail",
         success: () => {
-          console.log("success!!");
+          console.log("跳转到场地详情页面成功!!");
         },
         fail: (err) => {
-          console.log(err);
+          console.log('跳转到场地详情页面失败：',err);
         },
       });
-      console.log("点击成功");
     },
     changeType(type) {
       this.type = type.detail.title;
