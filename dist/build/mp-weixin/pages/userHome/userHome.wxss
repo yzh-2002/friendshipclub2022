@@ -1,0 +1,16 @@
+
+.userBars.data-v-5722c9c6 {
+  text-align: center;
+}
+.userAvatar.data-v-5722c9c6 {
+  height: 10rem;
+  background-color: skyblue;
+  border-top: 1rem solid skyblue;
+}
+.userMsg.data-v-5722c9c6 {
+  position: relative;
+  top: 3rem;
+  text-align: left;
+}
+
+

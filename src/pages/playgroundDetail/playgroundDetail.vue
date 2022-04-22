@@ -34,15 +34,22 @@
           </view>
           <view class="iteminfo">{{ score }}分</view>
         </view>
+        <view class="infoitem">
+          <view class="itemtitle">
+            <van-icon name="friends-o" size="40rpx" id="icon"></van-icon>
+            评分人数
+          </view>
+          <view class="iteminfo">{{ data.scoreObj.people }}人</view>
+        </view>
       </view>
     </view>
     <view class="title">注意事项</view>
-    <view class="notice"></view>
+    <view class="notice">{{ data.notice }}</view>
     <view class="button">
       <van-button round type="info" plain @click="star">点我收藏</van-button>
-      <van-button round type="info" plain @click="join" :disabled="disabled"
-        >{{state}}</van-button
-      >
+      <van-button round type="info" plain @click="join" :disabled="disabled">{{
+        state
+      }}</van-button>
     </view>
     <van-overlay :show="show">
       <view class="ratebox">
@@ -64,7 +71,7 @@
 </template>
 
 <script>
-import {joinContest} from "@/api/joinContest"
+import { joinContest } from "@/api/joinContest";
 export default {
   name: "playgroundDetail",
   data() {
@@ -78,33 +85,35 @@ export default {
   },
   onLoad(options) {
     this.id = options.id;
-    console.log("该场地的id：",this.id)
+    console.log("该场地的id：", this.id);
     // 获取场地详情信息
-    this.getplaygroundDetail()
+    this.getplaygroundDetail();
   },
   computed: {
     score() {
       //将分数保留一位小数
-      if (this.data.scoreObj){
-        return (this.data.scoreObj.score / this.data.scoreObj.people).toFixed(1);
-      }else{
-        return 5.0
+      if (this.data.scoreObj) {
+        return (this.data.scoreObj.score / this.data.scoreObj.people).toFixed(
+          1
+        );
+      } else {
+        return 5.0;
       }
     },
-    state(){
+    state() {
       // 如果无人预约就空闲，有人预约查看人数看差几人
-     if(this.data.person){
-        if (this.data.person.length){
-            // 有
-            const rest =this.data.type.limit-this.data.person.length;
-            return rest ? `加入比赛` : '人已满'        
-        }else{
-          return '预约比赛'
+      if (this.data.person) {
+        if (this.data.person.length) {
+          // 有
+          const rest = this.data.type.limit - this.data.person.length;
+          return rest ? `加入比赛` : "人已满";
+        } else {
+          return "预约比赛";
         }
-     }else{
-       return '预约比赛'
-     }
-    }
+      } else {
+        return "预约比赛";
+      }
+    },
   },
   methods: {
     getplaygroundDetail() {
@@ -114,7 +123,7 @@ export default {
           _id: this.id,
         },
         success: (res) => {
-          console.log('获取场地详情信息：',res)
+          console.log("获取场地详情信息：", res);
           this.data = res.result.data[0];
         },
         fail: (err) => {
@@ -220,22 +229,22 @@ export default {
         },
       });
     },
-    join(){
+    join() {
       // 加入比赛
-      joinContest(this.id).then(res=>{
-        if (res.result.status==200){
+      joinContest(this.id).then((res) => {
+        if (res.result.status == 200) {
           uni.showToast({
-            title:"加入比赛成功"
-          })
-          this.disabled =true
-        }else if(res.result.status==201){
+            title: "加入比赛成功",
+          });
+          this.disabled = true;
+        } else if (res.result.status == 201) {
           uni.showToast({
-            title:"请勿重复加入"
-          })
-          this.disabled =false
+            title: "请勿重复加入",
+          });
+          this.disabled = false;
         }
-      })
-    }
+      });
+    },
   },
 };
 </script>
@@ -318,6 +327,9 @@ export default {
   margin: 20rpx auto 180rpx;
   border-radius: 40rpx;
   box-shadow: 4rpx 8rpx 20rpx #888888;
+  text-align: center;
+  line-height: 80rpx;
+  color: #afb2b1;
 }
 .ratebox {
   width: 600rpx;

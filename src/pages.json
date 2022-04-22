@@ -91,23 +91,25 @@
     }
   },
   "tabBar": {
+    "color": "#BFBFBF",
+    "selectedColor": "#1989fa",
     "list": [
       {
         "pagePath": "pages/fontPage/index",
-        "iconPath":"static/common/tabBar/ground_icon.png",
-        "selectedIconPath":"static/common/tabBar/ground_icon_selected.png",
+        "iconPath": "static/common/tabBar/ground_icon.png",
+        "selectedIconPath": "static/common/tabBar/ground_icon_selected.png",
         "text": "球场列表"
       },
       {
         "pagePath": "pages/conTest/index",
-        "iconPath":"static/common/tabBar/place_icon.png",
-        "selectedIconPath":"static/common/tabBar/place_icon_selected.png",
+        "iconPath": "static/common/tabBar/place_icon.png",
+        "selectedIconPath": "static/common/tabBar/place_icon_selected.png",
         "text": "我的比赛"
       },
       {
         "pagePath": "pages/userHome/userHome",
-        "iconPath":"static/common/tabBar/person_icon.png",
-        "selectedIconPath":"static/common/tabBar/person_icon_selected.png",
+        "iconPath": "static/common/tabBar/person_icon.png",
+        "selectedIconPath": "static/common/tabBar/person_icon_selected.png",
         "text": "个人主页"
       }
     ],
