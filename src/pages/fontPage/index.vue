@@ -136,7 +136,7 @@ export default {
 }
 .empty {
   width: 600rpx;
-  height: 300rpx;
+  height: 568rpx;
   margin: 20rpx auto;
 }
 </style>
