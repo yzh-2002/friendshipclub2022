@@ -20,10 +20,11 @@
     </view>
     <van-cell-group class="userMsg">
       <van-cell title="修改简介" is-link @click="showPopup" />
-      <van-popup :show="show" @close="onClose">
-        <input type="text" v-model="introduction">
-        <button @click="reWrite">确认修改</button>
-      </van-popup>
+      <van-overlay :show="show" class="overlay">
+        <van-field label="个性签名：" v-model="introduction" class="input" />
+        <van-button @click="reWrite" class="btn1">确认修改</van-button>
+        <van-button @click="show=false" class="btn2">取消修改</van-button>
+      </van-overlay>
       <van-cell title="用户名" :value="nickname" />
       <van-cell title="信誉分" :value="credit" />
       <van-cell title="收藏场地" @click="toStarGround"/>
@@ -31,8 +32,6 @@
     </van-cell-group>
 
   </view>
-
-
 </template>
 
 <script>
@@ -54,9 +53,14 @@ export default {
     showPopup() {
       this.show = true
     },
-
-    onClose() {
-      this.show = false
+    reWrite(){
+      getUserIntroduction(this.introduction,true)
+      .then(res=>{
+        this.introduction =this.introduction=='' ? '这个人还没有个性签名':this.introduction
+        console.log("修改成功：",res)
+        // 关闭
+        this.show =false
+      })
     },
     // 两个跳转按钮
     toAboutUs(){
@@ -76,6 +80,16 @@ export default {
       getUserIntroduction('',false)
       .then(res=>{
         // 赋值
+        this.credit =res.result.data[0].credit
+        this.introduction =res.result.data[0].introduction=='' ? '这个人还没有个性签名':res.result.data[0].introduction
+      })
+  },
+  onShow(){
+    // 每次都要更新
+    getUserIntroduction('',false)
+      .then(res=>{
+        // 赋值
+        this.credit =res.result.data[0].credit
         this.introduction =res.result.data[0].introduction=='' ? '这个人还没有个性签名':res.result.data[0].introduction
       })
   }
@@ -97,10 +111,6 @@ export default {
   top: 3rem;
   text-align: left;
 }
-/deep/ .van-cell-group .van-cell {
-  background-color: #ffffff;
-  margin-bottom: 0.7rem;
-}
 .userBars {
   background-color: #e3e3e3;
   height: 100%;
@@ -112,5 +122,42 @@ export default {
   border:1px solid #e3e3e3;
   height: 3rem;
   margin: 0 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+.intro::after{
+  content: '个人简介';
+  display: block;
+  position: absolute;
+  top: -50%;
+  transform: translateY(50%);
+  left: 20px;
+  background-color: #FFFFFF;
+}
+.overlay .input{
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 100%;
+}
+.overlay .btn1{
+  position: absolute;
+  top: 50%;
+  left: 25%;
+  transform: translate(-50%,50%);
+}
+.overlay .btn2{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(50%,50%);
+}
+</style>
+<style>
+.userBars .van-cell-group .van-cell {
+  background-color: #ffffff !important;
+  margin-bottom: 0.7rem !important;
 }
 </style>

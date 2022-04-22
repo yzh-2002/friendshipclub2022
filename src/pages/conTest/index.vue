@@ -71,11 +71,10 @@ export default {
 <style scoped>
 .contest-view{
     width: 100%;
-    height: 100%;
 }
 .banner{
     width: 100%;
-    height: 15%;
+    height: 40%;
 }
 .banner>image{
     width: 100%;

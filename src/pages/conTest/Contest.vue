@@ -1,22 +1,24 @@
 <template>
-  <div class="contest-view">
-      <div class="img">
-        <image :src="item.img" />
-      </div>
-      <div class="detail">
-        <div class="title">{{item.name}}</div>
-        <div class="tips">
-          <div class="type">{{item.type.sport}}</div>
-          <div class="limit">限{{item.type.limit}}人</div>
-        </div>
-        <div class="time">
-          预约时间：14：00~16：00
-        </div>
-        <div class="contest-detail">
-            <button @click="navigateToDetail">场地详情</button>
-        </div>
-      </div>
-  </div>
+ <view class="container">
+    <view class="leftimg">
+      <image :src="item.img"></image>
+    </view>
+    <view class="info">
+      <view class="name">{{ item.name }}</view>
+      <van-tag round type="primary" class="sport">{{
+        item.type.sport
+      }}</van-tag>
+      <van-tag round type="primary" class="limit"
+        >限{{ item.type.limit }}人</van-tag
+      >
+      <view class="time">
+        <text>营业时间: 10:00-22:00</text>
+      </view>
+      <van-button plain type="info" @click="navigateToDetail"
+        >场地详情</van-button
+      >
+    </view>
+  </view>
 </template>
 
 <script>
@@ -40,74 +42,42 @@ export default {
 </script>
 
 <style scoped>
-.contest-view{
-  width: 80%;
-  height: 150px;
-  border-radius: 10px;
-  box-shadow:  0px 0px 10px 2px #666666;
-  margin-bottom: 20px;
+.container {
+  width: 700rpx;
+  height: 300rpx;
+  margin: 60rpx auto 40rpx;
   display: flex;
+  border-radius: 60rpx;
+  overflow: hidden;
+  border: 2rpx solid #eee;
+  box-shadow: 12rpx 12rpx 20rpx #888888;
 }
-.contest-view>.img{
-  width: 45%;
-  height: 100%;
+.leftimg {
+  flex: 1;
 }
-.img>image{
+.leftimg image {
   width: 100%;
   height: 100%;
-  background-image: 100%;
 }
-.detail{
-  width: 55%;
-  display: flex;
-  flex-wrap: wrap;
-  align-content: flex-start;
+.info {
+  flex: 1;
+  margin-left: 40rpx;
 }
-.title{
-  width: 100%;
-  height: 30px;
-  font-weight: 500;
-  font-size: 20px;
-  display: flex;
-  justify-content: flex-start;
-  align-content: center;
-  margin: 0 0 10px 5px;
+.info .name {
+  margin: 16rpx 0;
+  font-size: 40rpx;
+  font-weight: 700;
 }
-.tips{
-  display: flex;
-  justify-content: flex-start;
-  height: 25px;
-  margin-bottom: 10px;
+.info .limit,.info .state{
+  margin-left: 20rpx;
 }
-.tips :nth-child(n){
-  width: 60px;
-  height: 20px;
-  margin: 0px 5px;
-  background-color: #1989FA;
-  border-radius: 5px;
-  color: #FFFFFF;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.info .time {
+  margin: 16rpx 0 16rpx;
+  font-size: 26rpx;
+  color: gray;
 }
-.time{
-  display: flex;
-  flex-wrap: nowrap;
-  font-size: 12px;
-  margin-left: 5px;
-}
-.contest-detail{
-  width: 100%;
-  margin-top: 10px;
-}
-.contest-detail>button{
-  width: 80%;
-  height: 35px;
-  margin-left: 5px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #1989FA;
-  color: #FFFFFF;
+.info .state {
+  font-size: 26rpx;
+  color: gray;
 }
 </style>
