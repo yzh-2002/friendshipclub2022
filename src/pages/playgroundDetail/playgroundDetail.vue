@@ -51,22 +51,6 @@
         state
       }}</van-button>
     </view>
-    <van-overlay :show="show">
-      <view class="ratebox">
-        <view class="rateboxtitle">请评分</view>
-        <view class="rate">
-          <van-rate
-            :value="value"
-            :size="40"
-            color="#ffd21e"
-            void-icon="star"
-            void-color="#eee"
-            @change="onChange"
-            class="rate"
-          />
-        </view>
-      </view>
-    </van-overlay>
   </view>
 </template>
 
@@ -78,8 +62,6 @@ export default {
     return {
       id: "",
       data: {},
-      show: false,
-      value: 3,
       disabled: false,
       flag:true //标识该场地是否已被收藏
     };
@@ -212,59 +194,6 @@ export default {
         },
       });
     },
-    setScore() {
-      this.show = true;
-      wx.cloud.callFunction({
-        name: "storeRateTime",
-        data: {
-          _id: this.id,
-          time: Date.now(),
-        },
-        success: (res) => {
-          console.log(res);
-        },
-      });
-    },
-    onChange(event) {
-      wx.cloud.callFunction({
-        name: "setScore",
-        data: {
-          _id: this.data._id,
-          score: event.detail,
-        },
-        success: (res) => {
-          if (res.result.status === "200") {
-            uni.showToast({
-              title: "打分成功",
-              duration: 2000,
-            });
-          } else if (res.result.status === "400") {
-            uni.showToast({
-              title: "打分失败",
-              icon: "error",
-              duration: 2000,
-            });
-          } else {
-            uni.showToast({
-              title: "请先登录",
-              icon: "error",
-              duration: 2000,
-            });
-          }
-        },
-        fail: (err) => {
-          uni.showToast({
-            title: "打分失败",
-            icon: "error",
-            duration: 2000,
-          });
-        },
-        complete: () => {
-          this.show = false;
-          this.getplaygroundDetail(); //重新获取打分后的分数
-        },
-      });
-    },
     join() {
       // 加入比赛
       joinContest(this.id).then((res) => {
@@ -366,29 +295,6 @@ export default {
   text-align: center;
   line-height: 80rpx;
   color: #afb2b1;
-}
-.ratebox {
-  width: 600rpx;
-  height: 200rpx;
-  background-color: #fff;
-  border-radius: 40rpx;
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-}
-.rateboxtitle {
-  margin: 30rpx auto 0;
-  text-align: center;
-  height: 40rpx;
-  line-height: 40rpx;
-  font-size: 40rpx;
-  font-weight: 700;
-}
-.rate {
-  margin: 0 auto;
-  display: flex;
-  justify-content: center;
 }
 </style>
 

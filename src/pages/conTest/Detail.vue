@@ -25,6 +25,25 @@
             <van-button round type="info" plain @click="quit" 
               >退出比赛</van-button
             >
+             <van-button round type="info" plain @click="complete" 
+              >结束比赛</van-button
+            >
+             <van-overlay :show="show">
+              <view class="ratebox">
+                <view class="rateboxtitle">请评分</view>
+                <view class="rate">
+                  <van-rate
+                    :value="value"
+                    :size="40"
+                    color="#ffd21e"
+                    void-icon="star"
+                    void-color="#eee"
+                    @change="onChange"
+                    class="rate"
+                  />
+                </view>
+              </view>
+            </van-overlay>
         </div>
   </div>
 </template>
@@ -40,7 +59,9 @@ export default {
         return{
             item:{},
             personList:[],
-            flag:true //标识是否已经收藏
+            flag:true, //标识是否已经收藏
+            value: 5,
+            show:false
         }
     },
     methods:{
@@ -136,7 +157,59 @@ export default {
                 })
                 // console.log(res.result.location)
             })
-        }
+        },
+        complete(){
+            // 退出比赛
+            quitContest(this.item._id).then(res=>{
+                // 然后打开打分系统
+                this.show =true
+            })
+        },
+        onChange(event) {
+             wx.cloud.callFunction({
+               name: "setScore",
+               data: {
+                 _id: this.item._id,
+                 score: event.detail,
+               },
+               success: (res) => {
+                 if (res.result.status === "200") {
+                   uni.showToast({
+                     title: "打分成功",
+                     duration: 2000,
+                     success:()=>{
+                        //  跳转到首页
+                        uni.switchTab({
+                            url:"/pages/conTest/index"
+                        })
+                     }
+                   });
+                 } else if (res.result.status === "400") {
+                   uni.showToast({
+                     title: "打分失败",
+                     icon: "error",
+                     duration: 2000,
+                   });
+                 } else {
+                   uni.showToast({
+                     title: "请先登录",
+                     icon: "error",
+                     duration: 2000,
+                   });
+                 }
+               },
+               fail: (err) => {
+                 uni.showToast({
+                   title: "打分失败",
+                   icon: "error",
+                   duration: 2000,
+                 });
+               },
+               complete: () => {
+                 this.show = false;
+               },
+             });
+    },
     },
     computed:{
         collect(){
@@ -264,5 +337,27 @@ export default {
   bottom: 0;
   background-color: #f4f4f4;
 }
-
+.ratebox {
+  width: 600rpx;
+  height: 200rpx;
+  background-color: #fff;
+  border-radius: 40rpx;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+.rateboxtitle {
+  margin: 30rpx auto 0;
+  text-align: center;
+  height: 40rpx;
+  line-height: 40rpx;
+  font-size: 40rpx;
+  font-weight: 700;
+}
+.rate {
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+}
 </style>
