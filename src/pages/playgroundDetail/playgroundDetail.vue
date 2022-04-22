@@ -82,6 +82,11 @@ export default {
     // 获取场地详情信息
     this.getplaygroundDetail()
   },
+  onShow(options) {
+    this.id = options.id;
+    // 获取场地详情信息
+    this.getplaygroundDetail()
+  },
   computed: {
     score() {
       //将分数保留一位小数

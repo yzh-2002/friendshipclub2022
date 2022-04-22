@@ -18,6 +18,7 @@
                      <div class="name">{{person.nickName}}</div>
                  </div>
              </div>
+              <van-button round type="info" plain @click="credit" class="credit">点我打卡</van-button>
         </div>
         <div class="footer">
             <van-button round type="info" plain @click="star">点我收藏</van-button>
@@ -30,6 +31,8 @@
 
 <script>
 import {getContestUser} from "@/api/getContestUser"
+import {quitContest} from "@/api/quitContest"
+import {setCreditScore} from "@/api/setCreditScore"
 export default {
     name:"detail",
     data(){
@@ -53,6 +56,38 @@ export default {
         },
         quit(){
             // 退出比赛
+            const that =this
+            uni.showModal({
+                    title:"警告",
+                    content:"中途退出会扣除信誉分",
+                    success:function(res){
+                        if (res.confirm){
+                            quitContest(that.item._id).then(res=>{
+                                // 更改信誉分
+                                setCreditScore(10,false).then(result=>{
+                                    console.log("扣除信誉分：",result);
+                                    // 跳转到我的比赛页
+                                    uni.switchTab({
+                                         url: '/pages/conTest/index',
+                                         success:(res)=>{
+                                             console.log("成功跳转：",res)
+                                         },fail:(err)=>{
+                                             console.log("跳转失败：",err)
+                                         }
+                                    });
+                                })
+                           })
+                        }else{
+                            uni.showToast({
+                                title:"已取消",
+                                duration:2000
+                            })
+                        }
+                    }
+                })
+        },
+        credit(){
+            // 打卡功能（需要确定时间+地点是否合适）
         }
     },
     onLoad:function(option){
@@ -129,6 +164,9 @@ export default {
     height: 40px;
     border-radius: 20px;
     margin: 0 20px 0 40px;
+}
+.credit{
+    margin-top: 10px;
 }
 .footer{
     width: 100%;
