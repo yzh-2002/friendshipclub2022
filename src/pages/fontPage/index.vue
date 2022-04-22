@@ -40,7 +40,7 @@
       v-show="type === '全部' || type === item.type.sport"
     />
     <view class="empty" v-show="showEmpty">
-      <van-empty description="这里空空如也" />
+      <van-empty description="这里空空如也~" />
     </view>
   </view>
 </template>
@@ -64,7 +64,7 @@ export default {
         name: "getPlayground",
         success: (res) => {
           this.playground = res.result.data;
-          console.log('获取场地列表：',this.playground)
+          console.log("获取场地列表：", this.playground);
         },
         fail: (err) => {
           uni.showToast({
@@ -83,7 +83,7 @@ export default {
           console.log("跳转到场地详情页面成功!!");
         },
         fail: (err) => {
-          console.log('跳转到场地详情页面失败：',err);
+          console.log("跳转到场地详情页面失败：", err);
         },
       });
     },

@@ -177,7 +177,7 @@ var _default = {
         name: "getPlayground",
         success: function success(res) {
           _this.playground = res.result.data;
-          console.log('获取场地列表：', _this.playground);
+          console.log("获取场地列表：", _this.playground);
         },
         fail: function fail(err) {
           uni.showToast({
@@ -196,7 +196,7 @@ var _default = {
           console.log("跳转到场地详情页面成功!!");
         },
         fail: function fail(err) {
-          console.log('跳转到场地详情页面失败：', err);
+          console.log("跳转到场地详情页面失败：", err);
         }
       });
     },
