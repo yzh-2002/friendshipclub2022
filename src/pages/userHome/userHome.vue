@@ -9,15 +9,20 @@
         height="5rem"
         :src="avatar"
     />
-
+      <div>
+        {{nickname}}
+      </div>
 <!--    用户信息-->
-    <div>{{ introduction }}</div>
+    <div
+        class="intro"
+    >{{ introduction }}</div>
+
     </view>
     <van-cell-group class="userMsg">
       <van-cell title="修改简介" is-link @click="showPopup" />
       <van-popup :show="show" @close="onClose">
         <input type="text" v-model="introduction">
-        <button @click="onClose">确认修改</button>
+        <button @click="reWrite">确认修改</button>
       </van-popup>
       <van-cell title="用户名" :value="nickname" />
       <van-cell title="信誉分" :value="credit" />
@@ -51,11 +56,7 @@ export default {
     },
 
     onClose() {
-       getUserIntroduction(this.introduction,true)
-      .then(res=>{
-        console.log(res.result)
-      })
-       this.show = false;
+      this.show = false
     },
     // 两个跳转按钮
     toAboutUs(){
@@ -88,13 +89,28 @@ export default {
 
 .userAvatar {
   height: 10rem;
-  background-color: skyblue;
-  border-top: 1rem solid skyblue;
+  background-color: #ffffff;
+  border-top: 1rem solid #ffffff;
 }
 .userMsg {
   position: relative;
   top: 3rem;
   text-align: left;
 }
-
+/deep/ .van-cell-group .van-cell {
+  background-color: #ffffff;
+  margin-bottom: 0.7rem;
+}
+.userBars {
+  background-color: #e3e3e3;
+  height: 100%;
+}
+.about {
+  margin-top: 0.7rem;
+}
+.intro {
+  border:1px solid #e3e3e3;
+  height: 3rem;
+  margin: 0 1rem;
+}
 </style>
