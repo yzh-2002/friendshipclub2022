@@ -1,8 +1,0 @@
-{
-  "navigationBarTitleText": "我的比赛",
-  "usingComponents": {
-    "van-button": "/wxcomponents/dist/button/index",
-    "van-empty": "/wxcomponents/dist/empty/index",
-    "contest": "/pages/conTest/Contest"
-  }
-}
