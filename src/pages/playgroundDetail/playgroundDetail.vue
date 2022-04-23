@@ -50,6 +50,22 @@
       <van-button round type="info" plain @click="join" :disabled="disabled">{{
         state
       }}</van-button>
+      <van-overlay :show="show">
+          <van-datetime-picker
+            v-model="startTime"
+            type="time"
+            title="选择起始时间"
+            :min-hour="10"
+            :max-hour="20"
+          />
+          <van-datetime-picker
+            v-model="endTime"
+            type="time"
+            title="选择结束时间"
+            :min-hour="10"
+            :max-hour="20"
+          />
+      </van-overlay>
     </view>
   </view>
 </template>
@@ -63,7 +79,8 @@ export default {
       id: "",
       data: {},
       disabled: false,
-      flag:true //标识该场地是否已被收藏
+      flag:true, //标识该场地是否已被收藏
+      show:false
     };
   },
   onLoad(options) {
@@ -195,6 +212,7 @@ export default {
       });
     },
     join() {
+      console.log(this.state)
       // 加入比赛
       joinContest(this.id).then((res) => {
         if (res.result.status == 200) {
