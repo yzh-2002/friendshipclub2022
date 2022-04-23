@@ -154,7 +154,7 @@ exports.default = void 0;
 
 var Playground = function Playground() {
   __webpack_require__.e(/*! require.ensure | components/playground/Playground */ "components/playground/Playground").then((function () {
-    return resolve(__webpack_require__(/*! ../../components/playground/Playground */ 76));
+    return resolve(__webpack_require__(/*! ../../components/playground/Playground */ 78));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 

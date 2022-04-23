@@ -46,33 +46,43 @@
     <view class="title">注意事项</view>
     <view class="notice">{{ data.notice }}</view>
     <view class="button">
-      <van-button round type="info" plain @click="star">{{collect}}</van-button>
+      <van-button round type="info" plain @click="star">{{
+        collect
+      }}</van-button>
       <van-button round type="info" plain @click="join" :disabled="disabled">{{
         state
       }}</van-button>
-      <van-overlay :show="show" class="overlay">
+    </view>
+    <van-overlay :show="show" class="overlay">
+      <view class="time">
+        <view class="picker">
           <van-datetime-picker
             v-model="startTime"
             type="time"
             title="选择起始时间"
             :min-hour="10"
             :max-hour="20"
+            :item-height="36"
           />
           <van-datetime-picker
+            class="endpicker"
             v-model="endTime"
             type="time"
             title="选择结束时间"
             :min-hour="10"
             :max-hour="20"
+            :item-height="36"
           />
-          <van-button @click="checkTime" class="btn">预约比赛</van-button>
-      </van-overlay>
-    </view>
+        </view>
+        <view class="btn" @click="checkTime">预约比赛</view>
+      </view>
+    </van-overlay>
   </view>
 </template>
 
 <script>
 import { joinContest } from "@/api/joinContest";
+import { declare } from "../../../dist/build/mp-weixin/wxcomponents/dist/calendar/utils";
 export default {
   name: "playgroundDetail",
   data() {
@@ -80,10 +90,10 @@ export default {
       id: "",
       data: {},
       disabled: false,
-      flag:true, //标识该场地是否已被收藏
-      show:false,
-      startTime:"12:00",
-      endTime:"12:00"
+      flag: true, //标识该场地是否已被收藏
+      show: false,
+      startTime: "12:00",
+      endTime: "12:00",
     };
   },
   onLoad(options) {
@@ -91,43 +101,47 @@ export default {
     console.log("该场地的id：", this.id);
     // 获取场地详情信息
     this.getplaygroundDetail();
-    wx.cloud.callFunction({
-      name:"getUserIntroduction",
-      data:{
-        flag:false,
-        newValue:""
-      }
-    }).then(res=>{
-      // 检测场地id是否在用户收藏里
-      if (res.result.data[0].star.indexOf(this.id)!=-1){
-        // 说明在里面
-        this.flag =false
-      }else{
-        this.flag =true
-      }
-    })
+    wx.cloud
+      .callFunction({
+        name: "getUserIntroduction",
+        data: {
+          flag: false,
+          newValue: "",
+        },
+      })
+      .then((res) => {
+        // 检测场地id是否在用户收藏里
+        if (res.result.data[0].star.indexOf(this.id) != -1) {
+          // 说明在里面
+          this.flag = false;
+        } else {
+          this.flag = true;
+        }
+      });
   },
   onShow(options) {
     this.id = options.id;
     // 获取场地详情信息
-    this.getplaygroundDetail()
+    this.getplaygroundDetail();
     // 需要更新flag，是否处于收藏状态
     // 这里可以借用getUserIntroduction函数获取用户信息
-    wx.cloud.callFunction({
-      name:"getUserIntroduction",
-      data:{
-        flag:false,
-        newValue:""
-      }
-    }).then(res=>{
-      // 检测场地id是否在用户收藏里
-      if (res.result.data[0].star.indexOf(this.id)!=-1){
-        // 说明在里面
-        this.flag =false
-      }else{
-        this.flag =true
-      }
-    })
+    wx.cloud
+      .callFunction({
+        name: "getUserIntroduction",
+        data: {
+          flag: false,
+          newValue: "",
+        },
+      })
+      .then((res) => {
+        // 检测场地id是否在用户收藏里
+        if (res.result.data[0].star.indexOf(this.id) != -1) {
+          // 说明在里面
+          this.flag = false;
+        } else {
+          this.flag = true;
+        }
+      });
   },
   computed: {
     score() {
@@ -154,9 +168,9 @@ export default {
         return "预约比赛";
       }
     },
-    collect(){
-      return this.flag ?'点击收藏':"取消收藏"
-    }
+    collect() {
+      return this.flag ? "点击收藏" : "取消收藏";
+    },
   },
   methods: {
     getplaygroundDetail() {
@@ -179,23 +193,24 @@ export default {
       });
     },
     star() {
-      const that =this
+      const that = this;
       wx.cloud.callFunction({
         name: "star",
         data: {
           _id: this.id,
-          f:this.flag
+          f: this.flag,
         },
         success: (res) => {
           if (res.result.status === "200") {
             uni.showToast({
               title: `${res.result.msg}`,
               duration: 2000,
-              success:()=>{
-                that.flag =!that.flag //取反（表示此时已经收藏过了）
-              },fail:(err)=>{
-                console.log(err)
-              }
+              success: () => {
+                that.flag = !that.flag; //取反（表示此时已经收藏过了）
+              },
+              fail: (err) => {
+                console.log(err);
+              },
             });
           } else {
             uni.showToast({
@@ -214,53 +229,60 @@ export default {
         },
       });
     },
-    checkTime(){
-      const start =this.startTime.detail;
-      const end =this.endTime.detail;
-      if (start.substr(0,2)>end.substr(0,2) || ((start.substr(0,2)==end.substr(0,2)&&start.substr(3,2)>end.substr(3,2)))){
+    checkTime() {
+      const start = this.startTime.detail;
+      const end = this.endTime.detail;
+      if (
+        start.substr(0, 2) > end.substr(0, 2) ||
+        (start.substr(0, 2) == end.substr(0, 2) &&
+          start.substr(3, 2) > end.substr(3, 2))
+      ) {
         uni.showToast({
-          icon:"error",
-          title:"预约时间不合理！"
-        })
-        this.show =false //关闭
-      }else if(start.substr(0,2)==end.substr(0,2) && end.substr(3,2)-start.substr(3,2)<30){
+          icon: "error",
+          title: "预约时间不合理！",
+        });
+        this.show = false; //关闭
+      } else if (
+        start.substr(0, 2) == end.substr(0, 2) &&
+        end.substr(3, 2) - start.substr(3, 2) < 30
+      ) {
         uni.showToast({
-          icon:"error",
-          title:"预约时间过短!",
-           duration:2000
-        })
-        this.show =false //关闭
-      }else if(end.substr(0,2)-start.substr(0,2)>2){
+          icon: "error",
+          title: "预约时间过短!",
+          duration: 2000,
+        });
+        this.show = false; //关闭
+      } else if (end.substr(0, 2) - start.substr(0, 2) > 2) {
         uni.showToast({
-          icon:"error",
-          title:"预约时间过长!",
-           duration:2000
-        })
-        this.show =false //关闭
-      }else{
+          icon: "error",
+          title: "预约时间过长!",
+          duration: 2000,
+        });
+        this.show = false; //关闭
+      } else {
         uni.showToast({
-          icon:"success",
-          title:"恭喜你预约成功！",
-          duration:2000
-        })
+          icon: "success",
+          title: "恭喜你预约成功！",
+          duration: 2000,
+        });
         // 加入比赛
-         // 预约比赛成功之后才能加入比赛
-          joinContest(this.id).then((res) => {
+        // 预约比赛成功之后才能加入比赛
+        joinContest(this.id).then((res) => {
           if (res.result.status == 200) {
             uni.showToast({
               title: "预约比赛成功",
             });
             this.disabled = true;
-            this.show =false
+            this.show = false;
           }
         });
       }
     },
     join() {
-      if(this.state=='预约比赛'){
-        this.show =true; //打开遮罩即可
-      }else{
-         // 加入比赛
+      if (this.state == "预约比赛") {
+        this.show = true; //打开遮罩即可
+      } else {
+        // 加入比赛
         joinContest(this.id).then((res) => {
           if (res.result.status == 200) {
             uni.showToast({
@@ -362,15 +384,21 @@ export default {
   line-height: 80rpx;
   color: #afb2b1;
 }
-.overlay{
-  position: relative;
+.overlay {
+  width: 100%;
 }
-.btn{
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  margin-top: 15px;
-  border-radius: 5px;
+.overlay .picker {
+  height: 60%;
+}
+.btn {
+  width: 200rpx;
+  height: 60rpx;
+  margin: 60rpx auto 0;
+  border-radius: 10px;
+  background-color: #1989fa;
+  text-align: center;
+  line-height: 60rpx;
+  color: #fff;
 }
 </style>
 

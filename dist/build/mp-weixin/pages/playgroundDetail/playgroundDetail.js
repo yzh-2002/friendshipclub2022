@@ -147,6 +147,17 @@ exports.default = void 0;
 
 var _joinContest = __webpack_require__(/*! @/api/joinContest */ 27);
 
+var _utils = __webpack_require__(/*! ../../../dist/build/mp-weixin/wxcomponents/dist/calendar/utils */ 102);
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -305,7 +316,7 @@ var _default = {
       }
     },
     collect: function collect() {
-      return this.flag ? '点击收藏' : "取消收藏";
+      return this.flag ? "点击收藏" : "取消收藏";
     }
   },
   methods: {
@@ -415,7 +426,7 @@ var _default = {
     join: function join() {
       var _this5 = this;
 
-      if (this.state == '预约比赛') {
+      if (this.state == "预约比赛") {
         this.show = true; //打开遮罩即可
       } else {
         // 加入比赛

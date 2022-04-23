@@ -80,15 +80,20 @@
   line-height: 80rpx;
   color: #afb2b1;
 }
-.overlay.data-v-efc5a1f4{
-  position: relative;
+.overlay.data-v-efc5a1f4 {
+  width: 100%;
 }
-.btn.data-v-efc5a1f4{
-  position: absolute;
-  left: 50%;
-  -webkit-transform: translateX(-50%);
-          transform: translateX(-50%);
-  margin-top: 15px;
-  border-radius: 5px;
+.overlay .picker.data-v-efc5a1f4 {
+  height: 60%;
+}
+.btn.data-v-efc5a1f4 {
+  width: 200rpx;
+  height: 60rpx;
+  margin: 60rpx auto 0;
+  border-radius: 10px;
+  background-color: #1989fa;
+  text-align: center;
+  line-height: 60rpx;
+  color: #fff;
 }
 

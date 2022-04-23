@@ -188,7 +188,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 var Contest = function Contest() {
   __webpack_require__.e(/*! require.ensure | pages/conTest/Contest */ "pages/conTest/Contest").then((function () {
-    return resolve(__webpack_require__(/*! ./Contest.vue */ 83));
+    return resolve(__webpack_require__(/*! ./Contest.vue */ 85));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 

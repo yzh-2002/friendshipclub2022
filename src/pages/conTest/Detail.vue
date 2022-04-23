@@ -67,7 +67,8 @@
       <van-button round type="info" plain @click="complete"
         >结束比赛</van-button
       >
-      <van-overlay :show="show">
+    </view>
+    <van-overlay :show="show">
         <view class="ratebox">
           <view class="rateboxtitle">请评分</view>
           <view class="rate">
@@ -83,7 +84,6 @@
           </view>
         </view>
       </van-overlay>
-    </view>
   </view>
 </template>
 
