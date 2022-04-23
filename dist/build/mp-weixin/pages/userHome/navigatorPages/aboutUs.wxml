@@ -1,0 +1,1 @@
+<van-notice-bar class="notice data-v-0eaac2b6" vue-id="1ca9b701-1" text="邮箱: 2039143115@qq.com" background="#FFF5C6" speed="40" color="#FD9D01" scrollable="{{true}}" left-icon="volume-o" data-com-type="wx" bind:__l="__l"></van-notice-bar>

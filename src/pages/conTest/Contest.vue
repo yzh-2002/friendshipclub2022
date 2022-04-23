@@ -15,7 +15,7 @@
         <text>营业时间: 10:00-22:00</text>
       </view>
       <van-button plain type="info" @click="navigateToDetail"
-        >场地详情</van-button
+        >比赛详情</van-button
       >
     </view>
   </view>

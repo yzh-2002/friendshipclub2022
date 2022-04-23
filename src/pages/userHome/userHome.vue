@@ -63,15 +63,12 @@
     </view>
     <van-overlay :show="show" class="overlay">
       <view class="changeintro">
-        <input
-          v-model="introduction"
-          class="input"
-        />
+        <input class="input" v-model="introduction" maxlength="18" />
         <view class="btn">
           <van-button type="info" @click="reWrite" class="btn1"
             >确认修改</van-button
           >
-          <van-button @click="test" class="btn2">取消修改</van-button>
+          <van-button @click="cancel" class="btn2">取消修改</van-button>
         </view>
       </view>
     </van-overlay>
@@ -87,30 +84,33 @@ export default {
   data() {
     return {
       avatar: Vue.prototype.userInformation["avatarUrl"],
-      introduction: "登录后方可查看个性签名哦~~" ,
+      introduction: "登录后方可查看简介哦~~",
       nickname: Vue.prototype.userInformation["nickName"],
       credit: 0,
       show: false,
       gender: Vue.prototype.userInformation["gender"], //啥也不是
     };
   },
-  computed:{
-    sex(){
-      if (this.gender==1 || this.gender==0){
-        return this.gender === 0 ? "男" : "女" 
-      }else{
-        return '未知'
+  computed: {
+    sex() {
+      if (this.gender == 1 || this.gender == 0) {
+        return this.gender === 0 ? "男" : "女";
+      } else {
+        return "未知";
       }
-    }
+    },
   },
   methods: {
     // 控制简介修改弹出
     showPopup() {
       this.show = true;
     },
+    cancel() {
+      this.show = false;
+    },
     reWrite() {
       getUserIntroduction(this.introduction, true).then((res) => {
-        this.introduction = "" ? "这个人还没有个性签名" : this.introduction;
+        this.introduction = "" ? "这个人还没有简介" : this.introduction;
         // 关闭
         this.show = false;
       });
@@ -127,58 +127,61 @@ export default {
       });
     },
     login() {
-      userLogin().then((res) => {
-        // 加入全局变量
-        Vue.prototype.userInformation["nickName"] = res.result.data.nickName;
-        Vue.prototype.userInformation["gender"] = res.result.data.gender;
-        Vue.prototype.userInformation["avatarUrl"] = res.result.data.avatarUrl;
-        Vue.prototype.userInformation["location"] = {
-          longitude: res.result.data.location.longitude,
-          latitude: res.result.data.location.latitude,
-        };
-        // 重新设置页面变量
-        this.avatar = Vue.prototype.userInformation.avatarUrl;
-        this.nickname= Vue.prototype.userInformation.nickName;
-        this.gender= Vue.prototype.userInformation.gender;
-      }).then(()=>{
-        // 获取credit和个性签名
-         getUserIntroduction("", false).then((res) => {
-        // 赋值
-        this.credit = res.result.data[0].credit;
-        this.introduction =
-          res.result.data[0].introduction == ""
-            ? "这个人还没有个性签名"
-            : res.result.data[0].introduction;
-      });
-      });
+      userLogin()
+        .then((res) => {
+          // 加入全局变量
+          Vue.prototype.userInformation["nickName"] = res.result.data.nickName;
+          Vue.prototype.userInformation["gender"] = res.result.data.gender;
+          Vue.prototype.userInformation["avatarUrl"] =
+            res.result.data.avatarUrl;
+          Vue.prototype.userInformation["location"] = {
+            longitude: res.result.data.location.longitude,
+            latitude: res.result.data.location.latitude,
+          };
+          // 重新设置页面变量
+          this.avatar = Vue.prototype.userInformation.avatarUrl;
+          this.nickname = Vue.prototype.userInformation.nickName;
+          this.gender = Vue.prototype.userInformation.gender;
+        })
+        .then(() => {
+          // 获取credit和个性签名
+          getUserIntroduction("", false).then((res) => {
+            // 赋值
+            this.credit = res.result.data[0].credit;
+            this.introduction =
+              res.result.data[0].introduction == ""
+                ? "这个人还没有个性签名"
+                : res.result.data[0].introduction;
+          });
+        });
     },
   },
   //组件创建时获取credit和introduction
   created() {
-     // 每次都要检测是否登录
-    if (JSON.stringify(Vue.prototype.userInformation)!='{}'){
+    // 每次都要检测是否登录
+    if (JSON.stringify(Vue.prototype.userInformation) != "{}") {
       // 每次都要更新
       getUserIntroduction("", false).then((res) => {
         // 赋值
         this.credit = res.result.data[0].credit;
         this.introduction =
           res.result.data[0].introduction == ""
-            ? "这个人还没有个性签名"
+            ? "这个人还没有简介"
             : res.result.data[0].introduction;
       });
     }
   },
   onShow() {
-    console.log(Vue.prototype.userInformation)
+    console.log(Vue.prototype.userInformation);
     // 每次都要检测是否登录
-    if (JSON.stringify(Vue.prototype.userInformation)!='{}'){
+    if (JSON.stringify(Vue.prototype.userInformation) != "{}") {
       // 每次都要更新
       getUserIntroduction("", false).then((res) => {
         // 赋值
         this.credit = res.result.data[0].credit;
         this.introduction =
           res.result.data[0].introduction == ""
-            ? "这个人还没有个性签名"
+            ? "这个人还没有简介"
             : res.result.data[0].introduction;
       });
     }
@@ -211,9 +214,10 @@ export default {
 }
 .basicInfo .intro .introduction {
   margin-left: 10rpx;
-  width: 500rpx;
+  width: 600rpx;
   height: 100rpx;
   line-height: 100rpx;
+  font-size: 28rpx;
 }
 .basicInfo .userAvatar .avatar {
   margin: 30rpx 20rpx 0;
@@ -272,7 +276,7 @@ export default {
 }
 .changeintro {
   width: 600rpx;
-  height: 200rpx;
+  height: 260rpx;
   background-color: #fff;
   border-radius: 40rpx;
   position: absolute;
@@ -288,31 +292,31 @@ export default {
   display: flex;
   justify-content: space-around;
 }
-.btn>.btn1{
-  margin-right: 25px;
+.btn > .btn1 {
+  margin-right: 50rpx;
 }
-.btn>.btn2{
-  margin-left: 25px;
+.btn > .btn2 {
+  margin-left: 50rpx;
 }
-.input{
+.input {
   width: 80%;
-  height: 45px;
+  height: 90rpx;
   display: flex;
   justify-content: center;
   font-size: medium;
   color: #666666;
-  padding-left: 45px;
-  border: 1px solid #666666;
-  margin-top: 5px;
-  border-radius: 10px;
+  padding-left: 40rpx;
+  border: 2rpx solid #666666;
+  margin: 20rpx 30rpx 0;
+  border-radius: 20rpx;
   position: relative;
 }
-.input::after{
-  content: "个性签名：";
+.input::after {
+  content: "简介: ";
   display: block;
   position: absolute;
   top: 50%;
-  left: 0px;
+  left: 10rpx;
   transform: translateY(-50%);
   font-size: large;
   color: black;

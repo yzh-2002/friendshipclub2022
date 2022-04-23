@@ -62,7 +62,10 @@
     {
       "path": "pages/userHome/navigatorPages/aboutUs",
       "style": {
-        "navigationBarTitleText": "关于我们"
+        "navigationBarTitleText": "关于我们",
+        "usingComponents": {
+          "van-notice-bar": "/wxcomponents/dist/notice-bar/index"
+        }
       }
     },
     {
@@ -88,7 +91,7 @@
       "van-tag": "/wxcomponents/dist/tag/index",
       "van-rate": "/wxcomponents/dist/rate/index",
       "van-overlay": "/wxcomponents/dist/overlay/index",
-      "van-datetime-picker":"/wxcomponents/dist/datetime-picker/index"
+      "van-datetime-picker": "/wxcomponents/dist/datetime-picker/index"
     }
   },
   "tabBar": {
