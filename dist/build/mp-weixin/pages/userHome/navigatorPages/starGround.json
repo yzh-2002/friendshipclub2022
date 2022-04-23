@@ -1,6 +1,0 @@
-{
-  "navigationBarTitleText": "收藏场地",
-  "usingComponents": {
-    "contest": "/pages/conTest/Contest"
-  }
-}

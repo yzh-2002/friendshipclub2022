@@ -18,7 +18,7 @@
             <van-icon name="clock-o" size="40rpx" id="icon"></van-icon>
             预约时间
           </view>
-          <view class="iteminfo">10:00-22:00</view>
+          <view class="iteminfo">12:00-13:30</view>
         </view>
         <view class="infoitem">
           <view class="itemtitle">

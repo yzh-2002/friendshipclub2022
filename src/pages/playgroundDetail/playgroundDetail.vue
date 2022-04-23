@@ -50,7 +50,7 @@
       <van-button round type="info" plain @click="join" :disabled="disabled">{{
         state
       }}</van-button>
-      <van-overlay :show="show">
+      <van-overlay :show="show" class="overlay">
           <van-datetime-picker
             v-model="startTime"
             type="time"
@@ -65,6 +65,7 @@
             :min-hour="10"
             :max-hour="20"
           />
+          <van-button @click="checkTime" class="btn">预约比赛</van-button>
       </van-overlay>
     </view>
   </view>
@@ -80,7 +81,9 @@ export default {
       data: {},
       disabled: false,
       flag:true, //标识该场地是否已被收藏
-      show:false
+      show:false,
+      startTime:"12:00",
+      endTime:"12:00"
     };
   },
   onLoad(options) {
@@ -211,22 +214,67 @@ export default {
         },
       });
     },
+    checkTime(){
+      const start =this.startTime.detail;
+      const end =this.endTime.detail;
+      if (start.substr(0,2)>end.substr(0,2) || ((start.substr(0,2)==end.substr(0,2)&&start.substr(3,2)>end.substr(3,2)))){
+        uni.showToast({
+          icon:"error",
+          title:"预约时间不合理！"
+        })
+        this.show =false //关闭
+      }else if(start.substr(0,2)==end.substr(0,2) && end.substr(3,2)-start.substr(3,2)<30){
+        uni.showToast({
+          icon:"error",
+          title:"预约时间过短!",
+           duration:2000
+        })
+        this.show =false //关闭
+      }else if(end.substr(0,2)-start.substr(0,2)>2){
+        uni.showToast({
+          icon:"error",
+          title:"预约时间过长!",
+           duration:2000
+        })
+        this.show =false //关闭
+      }else{
+        uni.showToast({
+          icon:"success",
+          title:"恭喜你预约成功！",
+          duration:2000
+        })
+        // 加入比赛
+         // 预约比赛成功之后才能加入比赛
+          joinContest(this.id).then((res) => {
+          if (res.result.status == 200) {
+            uni.showToast({
+              title: "预约比赛成功",
+            });
+            this.disabled = true;
+            this.show =false
+          }
+        });
+      }
+    },
     join() {
-      console.log(this.state)
-      // 加入比赛
-      joinContest(this.id).then((res) => {
-        if (res.result.status == 200) {
-          uni.showToast({
-            title: "加入比赛成功",
-          });
-          this.disabled = true;
-        } else if (res.result.status == 201) {
-          uni.showToast({
-            title: "请勿重复加入",
-          });
-          this.disabled = false;
-        }
-      });
+      if(this.state=='预约比赛'){
+        this.show =true; //打开遮罩即可
+      }else{
+         // 加入比赛
+        joinContest(this.id).then((res) => {
+          if (res.result.status == 200) {
+            uni.showToast({
+              title: "加入比赛成功",
+            });
+            this.disabled = true;
+          } else if (res.result.status == 201) {
+            uni.showToast({
+              title: "请勿重复加入",
+            });
+            this.disabled = false;
+          }
+        });
+      }
     },
   },
 };
@@ -313,6 +361,16 @@ export default {
   text-align: center;
   line-height: 80rpx;
   color: #afb2b1;
+}
+.overlay{
+  position: relative;
+}
+.btn{
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: 15px;
+  border-radius: 5px;
 }
 </style>
 
